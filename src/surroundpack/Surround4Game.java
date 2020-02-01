@@ -3,16 +3,32 @@ package surroundpack;
 public class Surround4Game {
 	private Cell[][] board;
 	private int player;
+	private int numPlayers;
 
-	public Surround4Game() {
+	public Surround4Game(int size) {
 		//super();
-		board = new Cell[10][10];		
+		board = new Cell[size][size];
 		this.player = 1;
 	}
 
+	public Surround4Game(int size, int numPlayers) {
+		board = new Cell[size][size];
+		this.numPlayers = numPlayers;
+		this.player = 1;
+	}
+
+	public Surround4Game() {
+		//super();
+		board = new Cell[10][10];
+		this.player = 1;
+		this.numPlayers = 2;
+	}
+
+
+
 	public void reset() {
-		for (int r = 0; r < 10; r++) {
-			for (int c = 0; c < 10; c++) {
+		for (int r = 0; r < board.length; r++) {
+			for (int c = 0; c < board.length; c++) {
 				board[r][c] = null;
 			}
 		}
@@ -26,12 +42,17 @@ public class Surround4Game {
 		return player;
 	}
 
-	public int nextPlayer() {
-		//		player = player + 1;
-		//		if (player == 2)
-		//			player = 0;
+	public void setNumPlayers(int numPlayers) {
+		this.numPlayers = numPlayers;
+	}
 
-		player = (player % 2) + 1;
+	public int nextPlayer() {
+		if (this.player == this.numPlayers) {
+			this.player = 1;
+		} else {
+			this.player++;
+		}
+		//player = (player % 2) + 1;
 		return player;
 	}
 
@@ -47,8 +68,8 @@ public class Surround4Game {
 
 	public int getWinner() {
 
-		for (int row = 0; row < 10; row++) {
-			for (int col = 0; col < 10; col++) {
+		for (int row = 0; row < board.length; row++) {
+			for (int col = 0; col < board.length; col++) {
 
 				//top left corner case
 				if (row == 0 && col == 0) {
