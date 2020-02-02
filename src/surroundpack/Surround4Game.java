@@ -286,12 +286,12 @@ public class Surround4Game {
 				//bottom border case (excluding corners)
 				if (row == board.length - 1 && col != board.length - 1 && col != 0) {
 					//Are the cells directly to the left, right, and above empty?
-					if (board[0][col - 1] != null && board[0][col + 1] != null && board[row - 1][col] != null) {
+					if (board[board.length - 1][col - 1] != null && board[board.length - 1][col + 1] != null && board[row - 1][col] != null) {
 						//Are these cells occupied by the same player?
-						if (board[0][col - 1].getPlayerNumber() == board[0][col + 1].getPlayerNumber() &&
-								board[0][col - 1].getPlayerNumber() == board[row - 1][col].getPlayerNumber()) {
+						if (board[board.length - 1][col - 1].getPlayerNumber() == board[board.length - 1][col + 1].getPlayerNumber() &&
+								board[board.length - 1][col - 1].getPlayerNumber() == board[row - 1][col].getPlayerNumber()) {
 									//Player has won, returns their player number
-									return board[0][col - 1].getPlayerNumber();
+									return board[board.length - 1][col - 1].getPlayerNumber();
 						}
 					}
 				}
