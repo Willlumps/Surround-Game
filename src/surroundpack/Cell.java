@@ -26,10 +26,16 @@ public class Cell {
 	public Cell(int playerNumber) {
 		super();
 		this.playerNumber = playerNumber;
+		this.propertyColor = 1;
 	}
 	
 	public int getPlayerNumber() {
 		return playerNumber;
+	}
+
+	public void setPropertyColor(int propertyColor) {
+		this.propertyColor = propertyColor;
+
 	}
 }
 
