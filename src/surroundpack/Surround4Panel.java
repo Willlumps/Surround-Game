@@ -16,9 +16,11 @@ public class Surround4Panel extends JPanel {
     private ButtonListener listen;
     private JMenuItem quitItem;
     private JMenuItem newGameItem;
+    private JMenuItem resetGameItem;
     private Surround4Game game;
 
-    public Surround4Panel(JMenuItem newGameItem, JMenuItem quitItem) {
+    public Surround4Panel(JMenuItem resetGameItem, JMenuItem newGameItem, JMenuItem quitItem) {
+        this.resetGameItem = resetGameItem;
         this.newGameItem = newGameItem;
         this.quitItem = quitItem;
         listen = new ButtonListener();
@@ -26,6 +28,30 @@ public class Surround4Panel extends JPanel {
         setLayout(new BorderLayout());
         panel1 = new JPanel();
 
+        setUpGame();
+
+        add(panel1, BorderLayout.CENTER);
+		quitItem.addActionListener(listen);
+		newGameItem.addActionListener(listen);
+		resetGameItem.addActionListener(listen);
+
+	}
+
+	private boolean validGameParam(String input) {
+        if (input.matches("[0-9]+") && Integer.parseInt(input) > 3 && Integer.parseInt(input) < 21) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean validNumPlayers(String input) {
+        if (input.matches("[0-9]+") && Integer.parseInt(input) > 1) {
+            return true;
+        }
+        return false;
+    }
+
+    public void setUpGame() {
         //Prompt user for size of the game board
         String strBoardSize = JOptionPane.showInputDialog(null, "Enter the size of the board:" +
                 "Min: 4, Max: 20");
@@ -46,35 +72,25 @@ public class Surround4Panel extends JPanel {
 
         //Prompt the user for the number of players
         String numPlayers = JOptionPane.showInputDialog(null, "Enter the number of players (At least 2)");
+        //Checks for valid number of players
         if (validNumPlayers(numPlayers)) {
+            //Sets the number of players to the specified amount
             game.setNumPlayers(Integer.parseInt(numPlayers));
         } else {
+            //If input was invalid, warns user and sets the number of players to the default amount (2)
             JOptionPane.showMessageDialog(null, "Invalid number of players, setting to default (2)");
             game.setNumPlayers(2);
         }
 
-
-        add(panel1, BorderLayout.CENTER);
-		quitItem.addActionListener(listen);
-		newGameItem.addActionListener(listen);
-
-	}
-
-	private boolean validGameParam(String input) {
-        if (input.matches("[0-9]+") && Integer.parseInt(input) > 4 && Integer.parseInt(input) < 21) {
-            return true;
+        //Prompt the user for which player will go first
+        String firstPlayer = JOptionPane.showInputDialog(null, "What player will go first? " +
+                "(1 - " + game.getNumPlayers() + ")");
+        if (validNumPlayers(firstPlayer) && Integer.parseInt(firstPlayer) <= game.getNumPlayers()) {
+            game.setPlayer(Integer.parseInt(firstPlayer));
+        } else {
+            JOptionPane.showMessageDialog(null, "Invalid player, Player 1 will start");
+            game.setPlayer(1);
         }
-        return false;
-    }
-
-    private boolean validNumPlayers(String input) {
-        if (input.matches("[0-9]+") && Integer.parseInt(input) > 1) {
-            return true;
-        }
-        return false;
-    }
-
-    public void setUpGame() {
 
     }
 
@@ -84,8 +100,13 @@ public class Surround4Panel extends JPanel {
 				System.exit(1);
 
 			if (e.getSource() == newGameItem) {
-			    game.reset();
 			    panel1.removeAll();
+			    setUpGame();
+			    panel1.revalidate();
+            }
+
+			if (e.getSource() == resetGameItem) {
+			    game.reset();
 
             }
 
@@ -102,9 +123,8 @@ public class Surround4Panel extends JPanel {
             int winner = game.getWinner();
             if (winner != -1) {
                 JOptionPane.showMessageDialog(null, "Player " + winner + " Wins!");
-                game = new Surround4Game(board.length);
+                game.reset();
                 displayBoard(board.length);
-
             }
         }
     }

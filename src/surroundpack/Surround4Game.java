@@ -9,12 +9,7 @@ public class Surround4Game {
 		//super();
 		board = new Cell[size][size];
 		this.player = 1;
-	}
-
-	public Surround4Game(int size, int numPlayers) {
-		board = new Cell[size][size];
-		this.numPlayers = numPlayers;
-		this.player = 1;
+		setNumPlayers(this.numPlayers);
 	}
 
 	public Surround4Game() {
@@ -42,12 +37,23 @@ public class Surround4Game {
 		return player;
 	}
 
+	public void setPlayer(int player) {
+		if (player < 1 || player > this.numPlayers) {
+
+		}
+		this.player = player;
+	}
+
 	public void setNumPlayers(int numPlayers) {
 		this.numPlayers = numPlayers;
 	}
 
+	public int getNumPlayers() {
+		return numPlayers;
+	}
+
 	public int nextPlayer() {
-		if (this.player == this.numPlayers) {
+		if (this.player >= this.numPlayers) {
 			this.player = 1;
 		} else {
 			this.player++;
