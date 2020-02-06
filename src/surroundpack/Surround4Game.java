@@ -1,5 +1,9 @@
 package surroundpack;
 
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+
 public class Surround4Game {
 
 	/* 2D array of cells */
@@ -176,6 +180,8 @@ public class Surround4Game {
 			//at the current location.
 			Cell c = new Cell(player);
 			c.setPropertyColor(2);
+			c.setRow(row);
+			c.setCol(col);
 			board[row][col] = c;
 			return true;
 		}
@@ -183,6 +189,376 @@ public class Surround4Game {
 			return false;
 	}
 
+	public int checkTopLeftCornerOpponents(int row, int col) {
+		int count = 0;
+		if (!isDownOpponent(row, col)) {
+			count++;
+		}
+		if (!isRightOpponent(row, col)) {
+			count++;
+		}
+		return count;
+	}
+
+	public int checkTopRightCornerOpponents(int row, int col) {
+		int count = 0;
+		if (!isDownOpponent(row, col)) {
+			count++;
+		}
+		if (!isLeftOpponent(row, col)) {
+			count++;
+		}
+		return count;
+	}
+
+	public int checkBottomRightOpponents(int row, int col) {
+		int count = 0;
+		if (!isUpOpponent(row, col)) {
+			count++;
+		}
+		if (!isLeftOpponent(row, col)) {
+			count++;
+		}
+		return count;
+	}
+
+	public int checkBottomLeftOpponents(int row, int col) {
+		int count = 0;
+		if (!isUpOpponent(row, col)) {
+			count++;
+		}
+		if (!isRightOpponent(row, col)) {
+			count++;
+		}
+		return count;
+	}
+
+	public int checkTopBorderForOpponents(int row, int col) {
+		int count = 0;
+		if (!isDownOpponent(row, col)) {
+			count++;
+		}
+		if (!isLeftOpponent(row, col)) {
+			count++;
+		}
+		if (!isRightOpponent(row, col)) {
+			count++;
+		}
+		return count;
+	}
+
+	public int checkLeftBorderForOpponents(int row, int col) {
+		int count = 0;
+		if (!isDownOpponent(row, col)) {
+			count++;
+		}
+		if (!isUpOpponent(row, col)) {
+			count++;
+		}
+		if (!isRightOpponent(row, col)) {
+			count++;
+		}
+		return count;
+	}
+
+	public int checkBottomBorderForOpponents(int row, int col) {
+		int count = 0;
+		ArrayList<Integer> opp = new ArrayList<Integer>();
+		if (!isUpOpponent(row, col)) {
+			count++;
+			opp.add(board[row - 1][col].getPlayerNumber());
+		}
+		if (!isLeftOpponent(row, col)) {
+			count++;
+			opp.add(board[row][col - 1].getPlayerNumber());
+		}
+		if (!isRightOpponent(row, col)) {
+			count++;
+			opp.add(board[row][col + 1].getPlayerNumber());
+		}
+		if (opp.size() > 0 && count > 1) {
+			if (!sameOpponents(opp)) {
+				return 0;
+			}
+		}
+		return count;
+	}
+
+
+	public int checkRightBorderForOpponents(int row, int col) {
+		int count = 0;
+		if (!isUpOpponent(row, col)) {
+			count++;
+		}
+		if (!isLeftOpponent(row, col)) {
+			count++;
+		}
+		if (!isDownOpponent(row, col)) {
+			count++;
+		}
+		return count;
+	}
+
+	public int checkMiddleForOpponents(int row, int col) {
+		int count = 0;
+		if (!isDownOpponent(row, col)) {
+			count++;
+		}
+		if (!isUpOpponent(row, col)) {
+			count++;
+		}
+		if (!isLeftOpponent(row, col)) {
+			count++;
+		}
+		if (!isRightOpponent(row, col)) {
+			count++;
+		}
+		return count;
+
+	}
+
+	public boolean isDownOpponent(int row, int col) {
+
+		if (board[row][col] != null && board[row + 1][col] != null) {
+			if (board[row][col].getPlayerNumber() != board[row + 1][col].getPlayerNumber()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public boolean isUpOpponent(int row, int col) {
+		if (board[row][col] != null && board[row - 1][col] != null) {
+			if (board[row][col].getPlayerNumber() != board[row - 1][col].getPlayerNumber()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public boolean isRightOpponent(int row, int col) {
+
+
+		if (board[row][col] != null && board[row][col + 1] != null) {
+			if (board[row][col].getPlayerNumber() != board[row][col + 1].getPlayerNumber()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public boolean isLeftOpponent(int row, int col) {
+		if (board[row][col] != null && board[row][col - 1] != null) {
+			if (board[row][col].getPlayerNumber() != board[row][col - 1].getPlayerNumber()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean sameOpponents(ArrayList<Integer> opp) {
+		for (Integer i : opp) {
+			if (i != opp.get(0)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public Cell AI() {
+
+
+		for (int row = 0; row < board.length; row++) {
+			for (int col = 0; col < board.length; col++) {
+
+				if (getCurrentPlayer() == 1) {
+					if (getCell(row, col) != null && getCell(row, col).getPlayerNumber() == 2) {
+
+						//Top Left Corner Win AI
+						if (row == 0 & col == 0) {
+							if (checkTopLeftCornerOpponents(row, col) == 1) {
+								if (getCell(row + 1, col) == null && getCell(row, col + 1).getPlayerNumber() == 1) {
+									if (select(row + 1, col)) {
+										return board[row + 1][col];
+									}
+								} else if (getCell(row, col + 1) == null && getCell(row + 1, col).getPlayerNumber() == 1) {
+									if (select(row, col + 1)) {
+										return board[row][col + 1];
+									}
+								}
+							}
+						}
+						//Top Right Corner Win AI
+						else if (row == 0 & col == board.length - 1) {
+							if (checkTopRightCornerOpponents(row, col) == 1) {
+								if (getCell(row + 1, col) == null && getCell(row, col - 1).getPlayerNumber() == 1) {
+									if (select(row + 1, col)) {
+										return board[row + 1][col];
+									}
+								} else if (getCell(row, col - 1) == null && getCell(row + 1, col).getPlayerNumber() == 1) {
+									if (select(row, col - 1)) {
+										return board[row][col - 1];
+									}
+								}
+							}
+						}
+
+						//Bottom Left Corner Win AI
+						else if (row == board.length - 1 & col == 0) {
+							if (checkBottomLeftOpponents(row, col) == 1) {
+								if (getCell(row - 1, col) == null && getCell(row, col + 1).getPlayerNumber() == 1) {
+									if (select(row - 1, col)) {
+										return board[row - 1][col];
+									}
+								} else if (getCell(row, col + 1) == null && getCell(row - 1, col).getPlayerNumber() == 1) {
+									if (select(row, col + 1)) {
+										return board[row][col + 1];
+									}
+								}
+							}
+						}
+
+						//Bottom Right Corner Win AI
+						else if (row == board.length - 1 & col == board.length - 1) {
+							if (checkBottomRightOpponents(row, col) == 1) {
+								if (getCell(row - 1, col) == null && getCell(row, col - 1).getPlayerNumber() == 1) {
+									if (select(row - 1, col)) {
+										return board[row - 1][col];
+									}
+								} else if (getCell(row, col - 1) == null && getCell(row - 1, col).getPlayerNumber() == 1) {
+									if (select(row, col - 1)) {
+										return board[row][col - 1];
+									}
+								}
+							}
+						}
+
+						//Top Border Win AI
+						else if (row == 0) {
+							if (checkTopBorderForOpponents(row, col) == 2) {
+								if (getCell(row + 1, col) == null && getCell(row, col - 1).getPlayerNumber()
+										== 1 && getCell(row, col + 1).getPlayerNumber() == 1) {
+									if (select(row + 1, col)) {
+										return board[row + 1][col];
+									}
+								} else if (getCell(row, col - 1) == null && getCell(row + 1, col).getPlayerNumber()
+										== 1 && getCell(row, col + 1).getPlayerNumber() == 1)  {
+									if (select(row, col - 1)) {
+										return board[row][col - 1];
+									}
+								} else if (getCell(row, col + 1) == null && getCell(row + 1, col).getPlayerNumber()
+										== 1 && getCell(row, col - 1).getPlayerNumber() == 1) {
+									if (select(row, col + 1)) {
+										return board[row][col + 1];
+									}
+								}
+							}
+						}
+
+						//Right Border Win AI
+						else if (col == board.length - 1) {
+							if (checkRightBorderForOpponents(row, col) == 2) {
+								if (getCell(row + 1, col) == null && getCell(row, col - 1).getPlayerNumber()
+										== 1 && getCell(row - 1, col).getPlayerNumber() == 1) {
+									if (select(row + 1, col)) {
+										return board[row + 1][col];
+									}
+								} else if (getCell(row, col - 1) == null && getCell(row + 1, col).getPlayerNumber()
+										== 1 && getCell(row - 1, col).getPlayerNumber() == 1)  {
+									if (select(row, col - 1)) {
+										return board[row][col - 1];
+									}
+								} else if (getCell(row - 1, col) == null && getCell(row + 1, col).getPlayerNumber()
+										== 1 && getCell(row, col - 1).getPlayerNumber() == 1) {
+									if (select(row - 1, col)) {
+										return board[row - 1][col];
+									}
+								}
+							}
+						}
+
+						//Bottom Border Win AI
+						else if (row == board.length - 1) {
+							if (checkBottomBorderForOpponents(row, col) == 2) {
+								if (getCell(row - 1, col) == null && getCell(row, col - 1).getPlayerNumber()
+										== 1 && getCell(row, col + 1).getPlayerNumber() == 1) {
+									if (select(row - 1, col)) {
+										return board[row - 1][col];
+									}
+								} else if (getCell(row, col - 1) == null && getCell(row - 1, col).getPlayerNumber()
+										== 1 && getCell(row, col + 1).getPlayerNumber() == 1)  {
+									if (select(row, col - 1)) {
+										return board[row][col - 1];
+									}
+								} else if (getCell(row, col + 1) == null && getCell(row - 1, col).getPlayerNumber()
+										== 1 && getCell(row, col - 1).getPlayerNumber() == 1) {
+									if (select(row, col + 1)) {
+										return board[row][col + 1];
+									}
+								}
+							}
+						}
+
+						//Left Border Win AI
+						else if (col == 0) {
+							if (checkLeftBorderForOpponents(row, col) == 2) {
+								if (getCell(row + 1, col) == null && getCell(row, col + 1).getPlayerNumber()
+										== 1 && getCell(row - 1, col).getPlayerNumber() == 1) {
+									if (select(row + 1, col)) {
+										return board[row + 1][col];
+									}
+								} else if (getCell(row, col + 1) == null && getCell(row + 1, col).getPlayerNumber()
+										== 1 && getCell(row - 1, col).getPlayerNumber() == 1)  {
+									if (select(row, col + 1)) {
+										return board[row][col + 1];
+									}
+								} else if (getCell(row - 1, col) == null && getCell(row + 1, col).getPlayerNumber()
+										== 1 && getCell(row, col + 1).getPlayerNumber() == 1) {
+									if (select(row - 1, col)) {
+										return board[row - 1][col];
+									}
+								}
+							}
+						}
+
+						//Middle Board Win AI
+						else if (row != 0 && col != 0 && row != board.length - 1 && col != board.length - 1) {
+							if (checkMiddleForOpponents(row, col) == 3) {
+								if (getCell(row + 1, col) == null && getCell(row, col + 1).getPlayerNumber()
+										== 1 && getCell(row - 1, col).getPlayerNumber() == 1 &&
+										getCell(row, col - 1).getPlayerNumber() == 1) {
+									if (select(row + 1, col)) {
+										return board[row + 1][col];
+									}
+								} else if (getCell(row, col + 1) == null && getCell(row + 1, col).getPlayerNumber()
+										== 1 && getCell(row - 1, col).getPlayerNumber() == 1 &&
+										getCell(row, col - 1).getPlayerNumber() == 1)  {
+									if (select(row, col + 1)) {
+										return board[row][col + 1];
+									}
+								} else if (getCell(row - 1, col) == null && getCell(row + 1, col).getPlayerNumber()
+										== 1 && getCell(row, col + 1).getPlayerNumber() == 1 &&
+										getCell(row, col - 1).getPlayerNumber() == 1) {
+									if (select(row - 1, col)) {
+										return board[row - 1][col];
+									}
+								} else if (getCell(row, col - 1) == null && getCell(row + 1, col).getPlayerNumber()
+										== 1 && getCell(row, col + 1).getPlayerNumber() == 1 &&
+										getCell(row - 1, col).getPlayerNumber() == 1) {
+									if (select(row, col - 1)) {
+										return board[row][col - 1];
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+
+		return null;
+	}
 
 	/**
 	 *   Checks for a winning player on the game board
@@ -191,7 +567,6 @@ public class Surround4Game {
 	 */
 
 	public int getWinner() {
-		//TODO ADD ADDITIONAL CHECKS FOR EMPTY CELLS
 		//iterates through the board to check each cell
 		for (int row = 0; row < board.length; row++) {
 			for (int col = 0; col < board.length; col++) {
@@ -201,7 +576,8 @@ public class Surround4Game {
 					//Are the cells directly below and to the right empty?
 					if (board[0][1] != null && board[1][0] != null) {
 						//Does the same player occupy both of these cells?
-						if (board[0][1].getPlayerNumber() == board[1][0].getPlayerNumber() && board[0][0].getPlayerNumber() != board[0][1].getPlayerNumber()) {
+						if (board[0][1].getPlayerNumber() == board[1][0].getPlayerNumber() &&
+								board[0][0].getPlayerNumber() != board[0][1].getPlayerNumber()) {
 							//Player has won, returns their player number
 							return board[0][1].getPlayerNumber();
 						}
@@ -209,11 +585,12 @@ public class Surround4Game {
 				}
 
 				//top right corner case
-				if (row == 0 && col == board.length - 1) {
+				if (row == 0 && col == board.length - 1 && board[0][board.length - 1] != null) {
 					//Are the cells directly to the left and below empty?
 					if (board[0][board.length - 2] != null && board[1][board.length - 1] != null) {
 						//Does the same player occupy both of these cells?
-						if (board[0][board.length - 2].getPlayerNumber() == board[1][board.length - 1].getPlayerNumber()) {
+						if (board[0][board.length - 2].getPlayerNumber() == board[1][board.length - 1].getPlayerNumber()
+								&& board[0][board.length - 1].getPlayerNumber() != board[1][board.length - 1].getPlayerNumber()) {
 							//Player has won, return their player number
 							return board[0][board.length - 2].getPlayerNumber();
 						}
@@ -221,11 +598,12 @@ public class Surround4Game {
 				}
 
 				//bottom left corner case
-				if (row == board.length - 1 && col == 0) {
+				if (row == board.length - 1 && col == 0 && board[board.length - 1][0] != null) {
 					//Are the cells directly above and to the right empty?
 					if (board[board.length - 2][0] != null && board[board.length - 1][1] != null) {
 						//Are these cells occupied by the same player?
-						if (board[board.length - 2][0].getPlayerNumber() == board[board.length - 1][1].getPlayerNumber()) {
+						if (board[board.length - 2][0].getPlayerNumber() == board[board.length - 1][1].getPlayerNumber()
+								&& board[board.length - 1][0].getPlayerNumber() != board[board.length - 1][1].getPlayerNumber()) {
 							//Player has won, returns their player number
 							return board[board.length - 2][0].getPlayerNumber();
 						}
@@ -233,11 +611,14 @@ public class Surround4Game {
 				}
 
 				//bottom right corner case
-				if (row == board.length - 1 && col == board.length - 1) {
+				if (row == board.length - 1 && col == board.length - 1 && board[board.length - 1][board.length - 1] != null) {
 					//Are the cells directly to the left and above empty?
 					if (board[board.length - 1][board.length - 2] != null && board[board.length - 2][board.length - 1] != null) {
 						//Are these cells occupied by the same player?
-						if (board[board.length - 1][board.length - 2].getPlayerNumber() == board[board.length - 2][board.length - 1].getPlayerNumber()) {
+						if (board[board.length - 1][board.length - 2].getPlayerNumber() ==
+								board[board.length - 2][board.length - 1].getPlayerNumber() &&
+								board[board.length - 1][board.length - 1].getPlayerNumber() !=
+								board[board.length - 2][board.length - 1].getPlayerNumber()) {
 							//Player has won, returns their player number
 							return board[board.length - 1][board.length - 2].getPlayerNumber();
 						}
@@ -245,18 +626,19 @@ public class Surround4Game {
 				}
 
 				//left border case (excluding corners)
-				if (row != 0 && row != board.length - 1 && col == 0) {
+				if (row != 0 && row != board.length - 1 && col == 0 && board[row][col] != null) {
 					//Are the cells directly above, below, and to the right empty?
 					if (board[row - 1][col] != null && board[row + 1][col] != null && board[row][col + 1] != null) {
 						//Are these cells occupied by the same player?
 						if (board[row - 1][col].getPlayerNumber() == board[row + 1][col].getPlayerNumber() &&
-								board[row - 1][col].getPlayerNumber() == board[row][col + 1].getPlayerNumber()) {
+								board[row - 1][col].getPlayerNumber() == board[row][col + 1].getPlayerNumber() &&
+								board[row - 1][col].getPlayerNumber() != board[row][col].getPlayerNumber()) {
 									//Player has won, returns their player number
 									return board[row - 1][col].getPlayerNumber();
 						}
 					}
 				}
-
+				//TODO FINISH THE CHECK FOR SURROUNDED NULL SQUARES
 				//top border case (excluding corners)
 				if (row == 0 && col != board.length - 1 && col != 0) {
 					//Are the cells directly to the left, right, and below empty?
@@ -290,13 +672,15 @@ public class Surround4Game {
 						//Are these cells occupied by the same player?
 						if (board[board.length - 1][col - 1].getPlayerNumber() == board[board.length - 1][col + 1].getPlayerNumber() &&
 								board[board.length - 1][col - 1].getPlayerNumber() == board[row - 1][col].getPlayerNumber()) {
-									//Player has won, returns their player number
-									return board[board.length - 1][col - 1].getPlayerNumber();
+							//Player has won, returns their player number
+							return board[board.length - 1][col - 1].getPlayerNumber();
 						}
 					}
 				}
 
 				//middle of board case (excluding corners and borders)
+
+
 				if (row != 0 && row != board.length - 1 && col != 0 && col != board.length - 1) {
 					//Are the four cells directly surrounding this cell empty?
 					if (board[row - 1][col] != null && board[row][col + 1] != null && board[row + 1][col] != null

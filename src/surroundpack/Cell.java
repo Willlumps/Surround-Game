@@ -2,11 +2,16 @@ package surroundpack;
 
 import javax.swing.*;
 
-public class Cell {
+public class Cell extends JButton {
 
 	private int playerNumber;
 
 	private int propertyColor;
+
+	private int numSurroundingCells;
+
+	private int row;
+	private int col;
 	/*
 	 *  First, the Surround4 game class will only use the player
 	 *   number to determine a winner.
@@ -26,7 +31,8 @@ public class Cell {
 	public Cell(int playerNumber) {
 		super();
 		this.playerNumber = playerNumber;
-		this.propertyColor = 1;
+		this.propertyColor = 0;
+		this.numSurroundingCells = 0;
 	}
 	
 	public int getPlayerNumber() {
@@ -37,5 +43,34 @@ public class Cell {
 		this.propertyColor = propertyColor;
 
 	}
+
+	public int getPropertyColor() {
+		return propertyColor;
+	}
+
+	public void setNumSurroundingCells(int numSurroundingCells) {
+		this.numSurroundingCells = numSurroundingCells;
+	}
+
+	public int getNumSurroundingCells() {
+		return numSurroundingCells;
+	}
+
+	public void setRow(int row) {
+		this.row = row;
+	}
+
+	public int getRow() {
+		return row;
+	}
+
+	public void setCol(int col) {
+		this.col = col;
+	}
+
+	public int getCol() {
+		return col;
+	}
+
 }
 

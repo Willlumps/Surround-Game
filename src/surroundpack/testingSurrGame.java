@@ -14,7 +14,7 @@ public class testingSurrGame {
 		g.select(0,0);
 		g.nextPlayer();
 		g.select(1, 0);
-		assertTrue(g.getWinner() == 0);
+		assertTrue(g.getWinner() == 1);
 	}
 	
 	@Test
@@ -25,7 +25,7 @@ public class testingSurrGame {
 		g.select(0,3);
 		g.nextPlayer();
 		g.select(1, 3);
-		assertTrue(g.getWinner() == 0);
+		assertTrue(g.getWinner() == 1);
 	}
 
 }

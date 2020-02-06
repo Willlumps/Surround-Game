@@ -203,6 +203,7 @@ public class Surround4Panel extends JPanel {
 
             }
 
+
             //loops through the game squares to check if one was pressed
             for (int row = 0; row < board.length; row++) {
                 for (int col = 0; col < board.length; col++) {
@@ -213,10 +214,22 @@ public class Surround4Panel extends JPanel {
                             //if empty, sets the square to display the number of the player that pressed it
 
                             board[row][col].setText("" + game.getCurrentPlayer());
-                            board[row][col].setBackground(Color.pink);
                             player = game.nextPlayer();
-                            AI();
+                            resetBack(board.length);
 
+                            for (int r = 0; r < board.length; r++) {
+                                for (int c = 0; c < board.length; c++) {
+                                    paintBackground(r, c);
+                                }
+                            }
+                            AI();
+                            resetBack(board.length);
+
+                            for (int r = 0; r < board.length; r++) {
+                                for (int c = 0; c < board.length; c++) {
+                                    paintBackground(r, c);
+                                }
+                            }
 
                             //moves onto the next player
                             //player = game.nextPlayer();
@@ -227,6 +240,9 @@ public class Surround4Panel extends JPanel {
                     }
                 }
             }
+
+
+            //resetBack(board.length);
 
             //Displays the correct number on each square on the board
             displayBoard(board.length);
@@ -247,348 +263,102 @@ public class Surround4Panel extends JPanel {
         }
     }
 
-    public int checkAdjacentEmpty(int row, int col) {
-        int count = 0;
+    private void paintBackground(int row, int col) {
         if (row == 0 && col == 0) {
-            if (getRightValue(row, col) == null) {
-                count++;
-            }
-            if (getDownValue(row, col) == null) {
-                count++;
+            if (game.checkTopLeftCornerOpponents(row, col) == 1) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.pink);
+                }
+
             }
         } else if (row == 0 && col == board.length - 1) {
-            if (getDownValue(row, col) == null) {
-                count++;
+            if (game.checkTopRightCornerOpponents(row, col) == 1) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.pink);
+                }
             }
-            if (getLeftValue(row, col) == null) {
-                count++;
-            }
-        } else if (row == board.length - 1 && col == 0) {
-            if (getRightValue(row, col) == null) {
-                count++;
-            }
-            if (getUpValue(row, col) == null) {
-                count++;
+        }  else if (row == board.length - 1 && col == 0) {
+            if (game.checkBottomLeftOpponents(row, col) == 1) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.pink);
+                }
             }
         } else if (row == board.length - 1 && col == board.length - 1) {
-            if (getUpValue(row, col) == null) {
-                count++;
-            }
-            if (getLeftValue(row, col) == null) {
-                count++;
+            if (game.checkBottomRightOpponents(row, col) == 1) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.pink);
+                }
             }
         } else if (row == 0) {
-            if (getRightValue(row, col) == null) {
-                count++;
-            }
-            if (getDownValue(row, col) == null) {
-                count++;
-            }
-            if (getLeftValue(row, col) == null) {
-                count++;
-            }
-
-        } else if(row == board.length - 1) {
-            if (getRightValue(row, col) == null) {
-                count++;
-            }
-            if (getUpValue(row, col) == null) {
-                count++;
-            }
-            if (getLeftValue(row, col) == null) {
-                count++;
+            if (game.checkTopBorderForOpponents(row, col) == 1) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.decode("#e1e4af"));
+                }
+            } else if (game.checkTopBorderForOpponents(row, col) == 2) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.pink);
+                }
             }
         } else if (col == 0) {
-            if (getRightValue(row, col) == null) {
-                count++;
+            if (game.checkLeftBorderForOpponents(row, col) == 1) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.decode("#e1e4af"));
+                }
+            } else if (game.checkLeftBorderForOpponents(row, col) == 2) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.pink);
+                }
             }
-            if (getDownValue(row, col) == null) {
-                count++;
-            }
-            if (getUpValue(row, col) == null) {
-                count++;
+        } else if (row == board.length - 1) {
+            if (game.checkBottomBorderForOpponents(row, col) == 1) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.decode("#e1e4af"));
+                }
+            } else if (game.checkBottomBorderForOpponents(row, col) == 2) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.pink);
+                }
             }
         } else if (col == board.length - 1) {
-            if (getUpValue(row, col) == null) {
-                count++;
-            }
-            if (getDownValue(row, col) == null) {
-                count++;
-            }
-            if (getLeftValue(row, col) == null) {
-                count++;
+            if (game.checkRightBorderForOpponents(row, col) == 1) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.decode("#e1e4af"));
+                }
+            } else if (game.checkRightBorderForOpponents(row, col) == 2) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.pink);
+                }
             }
         } else {
-
-            if (getRightValue(row, col) == null) {
-                count++;
-            }
-            if (getDownValue(row, col) == null) {
-                count++;
-            }
-            if (getLeftValue(row, col) == null) {
-                count++;
-            }
-            if (getUpValue(row, col) == null) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    public Cell getUpValue(int row, int col) {
-        if (row == 0) {
-            throw new IndexOutOfBoundsException();
-        }
-        return game.getCell(row - 1, col);
-    }
-
-    public Cell getRightValue(int row, int col) {
-        if (col == board.length - 1) {
-            throw new IndexOutOfBoundsException();
-        }
-        return game.getCell(row, col + 1);
-    }
-
-    public Cell getLeftValue(int row, int col) {
-        if (col == 0) {
-            throw new IndexOutOfBoundsException();
-        }
-        return game.getCell(row, col - 1);
-    }
-
-    public Cell getDownValue(int row, int col) {
-        if (row == board.length - 1) {
-            throw new IndexOutOfBoundsException();
-        }
-        return game.getCell(row + 1, col);
-    }
-
-    public void AI() {
-
-            for (int row = 0; row < board.length; row++) {
-                for (int col = 0; col < board.length; col++) {
-
-
-                    if (game.getCurrentPlayer() == 1) {
-                        if (game.getCell(row, col) != null && game.getCell(row, col).getPlayerNumber() == 2) {
-
-                            //Current square is the opponent, add it to some list to reference after checking all squares for best match
-                            System.out.println(checkAdjacentEmpty(row, col));
-
-
-                            cornerAI(row, col);
-                            topBorderAI(row, col);
-                            rightBorderAI(row, col);
-                            bottomBorderAI(row, col);
-                            leftBorderAI(row, col);
-                            middleBoardAI(row, col);
-
-                        }
-                    }
+            if (game.checkMiddleForOpponents(row, col) == 1) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.decode("#b4d88d"));
                 }
-            }
-
-
-
-    }
-
-    public void cornerAI(int row, int col) {
-        if (checkAdjacentEmpty(row, col) == 1) {
-            //Checks top left corner for winning move
-            if (row == 0 && col == 0 && getRightValue(row, col) == null && getDownValue(row, col).getPlayerNumber() == 1) {
-                if (game.select(row, col + 1)) {
-                    board[row][col + 1].setText("" + game.getCurrentPlayer());
-                    board[row][col + 1].setBackground(Color.gray);
-                    player = game.nextPlayer();
-
+            } else if (game.checkMiddleForOpponents(row, col) == 2) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.decode("#e1e4af"));
                 }
-            } else if (row == 0 && col == 0 && getDownValue(row, col) == null && getRightValue(row, col).getPlayerNumber() == 1) {
-                if (game.select(row + 1, col)) {
-                    board[row + 1][col].setText("" + game.getCurrentPlayer());
-                    board[row + 1][col].setBackground(Color.gray);
-                    player = game.nextPlayer();
-                }
-            } else if (row == 0 && col == board.length - 1 && getLeftValue(row, col) == null && getDownValue(row, col).getPlayerNumber() == 1) {
-                if (game.select(row, col - 1)) {
-                    board[row][col - 1].setText("" + game.getCurrentPlayer());
-                    board[row][col - 1].setBackground(Color.gray);
-                    player = game.nextPlayer();
-                }
-            } else if (row == 0 && col == board.length - 1 && getDownValue(row, col) == null && getLeftValue(row, col).getPlayerNumber() == 1) {
-                if (game.select(row + 1, col)) {
-                    board[row + 1][col].setText("" + game.getCurrentPlayer());
-                    board[row + 1][col].setBackground(Color.gray);
-                    player = game.nextPlayer();
-                }
-            } else if (row == board.length - 1 && col == 0 && getUpValue(row, col) == null && getRightValue(row, col).getPlayerNumber() == 1) {
-                if (game.select(row - 1, col)) {
-                    board[row - 1][col].setText("" + game.getCurrentPlayer());
-                    board[row - 1][col].setBackground(Color.gray);
-                    player = game.nextPlayer();
-                }
-            } else if (row == board.length - 1 && col == 0 && getRightValue(row, col) == null && getUpValue(row, col).getPlayerNumber() == 1) {
-                if (game.select(row, col + 1)) {
-                    board[row][col + 1].setText("" + game.getCurrentPlayer());
-                    board[row][col + 1].setBackground(Color.gray);
-                    player = game.nextPlayer();
-                }
-            } else if (row == board.length - 1 && col == board.length - 1 && getLeftValue(row, col) == null && getUpValue(row, col).getPlayerNumber() == 1) {
-                if (game.select(row, col - 1)) {
-                    board[row][col - 1].setText("" + game.getCurrentPlayer());
-                    board[row][col - 1].setBackground(Color.gray);
-                    player = game.nextPlayer();
-                }
-            } else if (row == board.length - 1 && col == board.length - 1 && getUpValue(row, col) == null && getLeftValue(row, col).getPlayerNumber() == 1) {
-                if (game.select(row - 1, col)) {
-                    board[row - 1][col].setText("" + game.getCurrentPlayer());
-                    board[row - 1][col].setBackground(Color.gray);
-                    player = game.nextPlayer();
+            } else if (game.checkMiddleForOpponents(row, col) == 3) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.pink);
                 }
             }
         }
     }
 
-    public void topBorderAI(int row, int col) {
-        if (checkAdjacentEmpty(row, col) == 1) {
-            if (row == 0) {
-                if (getLeftValue(row, col) == null && getRightValue(row, col).getPlayerNumber() == 1 && getDownValue(row, col).getPlayerNumber() == 1) {
-                    if (game.select(row, col - 1)) {
-                        board[row][col - 1].setText("" + game.getCurrentPlayer());
-                        board[row][col - 1].setBackground(Color.gray);
-                        player = game.nextPlayer();
-                    }
-                } else if (getRightValue(row, col) == null && getLeftValue(row, col).getPlayerNumber() == 1 && getDownValue(row, col).getPlayerNumber() == 1) {
-                    if (game.select(row, col + 1)) {
-                        board[row][col + 1].setText("" + game.getCurrentPlayer());
-                        board[row][col + 1].setBackground(Color.gray);
-                        player = game.nextPlayer();
-                    }
-                } else if (getDownValue(row, col) == null && getRightValue(row, col).getPlayerNumber() == 1 && getLeftValue(row, col).getPlayerNumber() == 1) {
-                    if (game.select(row + 1, col)) {
-                        board[row + 1][col].setText("" + game.getCurrentPlayer());
-                        board[row + 1][col].setBackground(Color.gray);
-                        player = game.nextPlayer();
-                    }
-                }
-            }
+    private void AI() {
+
+        Cell nextMove = game.AI();
+
+        if (nextMove != null) {
+            board[nextMove.getRow()][nextMove.getCol()].setText("" + game.getCurrentPlayer());
+            player = game.nextPlayer();
         }
     }
 
-    public void rightBorderAI(int row, int col) {
-        if (checkAdjacentEmpty(row, col) == 1) {
-            if (col == board.length - 1) {
-                if (getLeftValue(row, col) == null && getUpValue(row, col).getPlayerNumber() == 1 && getDownValue(row, col).getPlayerNumber() == 1) {
-                    if (game.select(row, col - 1)) {
-                        board[row][col - 1].setText("" + game.getCurrentPlayer());
-                        board[row][col - 1].setBackground(Color.gray);
-                        player = game.nextPlayer();
-                    }
-                } else if (getUpValue(row, col) == null && getLeftValue(row, col).getPlayerNumber() == 1 && getDownValue(row, col).getPlayerNumber() == 1) {
-                    if (game.select(row - 1, col)) {
-                        board[row - 1][col].setText("" + game.getCurrentPlayer());
-                        board[row - 1][col].setBackground(Color.gray);
-                        player = game.nextPlayer();
-                    }
-                } else if (getDownValue(row, col) == null && getUpValue(row, col).getPlayerNumber() == 1 && getLeftValue(row, col).getPlayerNumber() == 1) {
-                    if (game.select(row + 1, col)) {
-                        board[row + 1][col].setText("" + game.getCurrentPlayer());
-                        board[row + 1][col].setBackground(Color.gray);
-                        player = game.nextPlayer();
-                    }
-                }
-            }
-        }
-    }
-
-    public void bottomBorderAI(int row, int col) {
-        if (checkAdjacentEmpty(row, col) == 1) {
-            if (row == board.length - 1) {
-                if (getLeftValue(row, col) == null && getRightValue(row, col).getPlayerNumber() == 1 && getUpValue(row, col).getPlayerNumber() == 1) {
-                    if (game.select(row, col - 1)) {
-                        board[row][col - 1].setText("" + game.getCurrentPlayer());
-                        board[row][col - 1].setBackground(Color.gray);
-                        player = game.nextPlayer();
-                    }
-                } else if (getRightValue(row, col) == null && getLeftValue(row, col).getPlayerNumber() == 1 && getUpValue(row, col).getPlayerNumber() == 1) {
-                    if (game.select(row, col + 1)) {
-                        board[row][col + 1].setText("" + game.getCurrentPlayer());
-                        board[row][col + 1].setBackground(Color.gray);
-                        player = game.nextPlayer();
-                    }
-                } else if (getUpValue(row, col) == null && getRightValue(row, col).getPlayerNumber() == 1 && getLeftValue(row, col).getPlayerNumber() == 1) {
-                    if (game.select(row - 1, col)) {
-                        board[row - 1][col].setText("" + game.getCurrentPlayer());
-                        board[row - 1][col].setBackground(Color.gray);
-                        player = game.nextPlayer();
-                    }
-                }
-            }
-        }
-    }
-
-    public void leftBorderAI(int row, int col) {
-        if (checkAdjacentEmpty(row, col) == 1) {
-            if (col == 0) {
-                if (getRightValue(row, col) == null && getUpValue(row, col).getPlayerNumber() == 1 && getDownValue(row, col).getPlayerNumber() == 1) {
-                    if (game.select(row, col + 1)) {
-                        board[row][col + 1].setText("" + game.getCurrentPlayer());
-                        board[row][col + 1].setBackground(Color.gray);
-                        player = game.nextPlayer();
-                    }
-                } else if (getUpValue(row, col) == null && getRightValue(row, col).getPlayerNumber() == 1 && getDownValue(row, col).getPlayerNumber() == 1) {
-                    if (game.select(row - 1, col)) {
-                        board[row - 1][col].setText("" + game.getCurrentPlayer());
-                        board[row - 1][col].setBackground(Color.gray);
-                        player = game.nextPlayer();
-                    }
-                } else if (getDownValue(row, col) == null && getUpValue(row, col).getPlayerNumber() == 1 && getRightValue(row, col).getPlayerNumber() == 1) {
-                    if (game.select(row + 1, col)) {
-                        board[row + 1][col].setText("" + game.getCurrentPlayer());
-                        board[row + 1][col].setBackground(Color.gray);
-                        player = game.nextPlayer();
-                    }
-                }
-            }
-        }
-    }
-
-    public void middleBoardAI(int row, int col) {
-        if (checkAdjacentEmpty(row, col) == 1) {
-            if (getUpValue(row, col) == null && getRightValue(row, col).getPlayerNumber() == 1 && getDownValue(row, col).getPlayerNumber() == 1 &&
-                    getLeftValue(row, col).getPlayerNumber() == 1) {
-                if (game.select(row - 1, col)) {
-                    board[row - 1][col].setText("" + game.getCurrentPlayer());
-                    board[row - 1][col].setBackground(Color.gray);
-                    player = game.nextPlayer();
-                }
-            } else if (getRightValue(row, col) == null && getUpValue(row, col).getPlayerNumber() == 1 && getDownValue(row, col).getPlayerNumber() == 1 &&
-                    getLeftValue(row, col).getPlayerNumber() == 1) {
-                if (game.select(row, col + 1)) {
-                    board[row][col + 1].setText("" + game.getCurrentPlayer());
-                    board[row][col + 1].setBackground(Color.gray);
-                    player = game.nextPlayer();
-                }
-            } else if (getDownValue(row, col) == null && getRightValue(row, col).getPlayerNumber() == 1 && getUpValue(row, col).getPlayerNumber() == 1 &&
-                    getLeftValue(row, col).getPlayerNumber() == 1) {
-                if (game.select(row + 1, col)) {
-                    board[row + 1][col].setText("" + game.getCurrentPlayer());
-                    board[row + 1][col].setBackground(Color.gray);
-                    player = game.nextPlayer();
-                }
-            } else if (getLeftValue(row, col) == null && getUpValue(row, col).getPlayerNumber() == 1 && getDownValue(row, col).getPlayerNumber() == 1 &&
-                    getRightValue(row, col).getPlayerNumber() == 1) {
-                if (game.select(row, col - 1)) {
-                    board[row][col - 1].setText("" + game.getCurrentPlayer());
-                    board[row][col - 1].setBackground(Color.gray);
-                    player = game.nextPlayer();
-                }
-            }
-        }
-    }
 
     private void resetBack(int size) {
-        for (int i = 0; i < size; i++) {           // rows
+        for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 board[i][j].setBackground(null);
             }
