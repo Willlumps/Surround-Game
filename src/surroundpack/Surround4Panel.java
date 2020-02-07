@@ -219,6 +219,7 @@ public class Surround4Panel extends JPanel {
 
                             for (int r = 0; r < board.length; r++) {
                                 for (int c = 0; c < board.length; c++) {
+                                    game.checkForOpponents(r, c);
                                     paintBackground(r, c);
                                 }
                             }
@@ -227,6 +228,7 @@ public class Surround4Panel extends JPanel {
 
                             for (int r = 0; r < board.length; r++) {
                                 for (int c = 0; c < board.length; c++) {
+                                    game.checkForOpponents(r, c);
                                     paintBackground(r, c);
                                 }
                             }
@@ -264,81 +266,84 @@ public class Surround4Panel extends JPanel {
     }
 
     private void paintBackground(int row, int col) {
-        if (row == 0 && col == 0) {
-            if (game.checkTopLeftCornerOpponents(row, col) == 1) {
-                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
-                    board[row][col].setBackground(Color.pink);
-                }
 
-            }
-        } else if (row == 0 && col == board.length - 1) {
-            if (game.checkTopRightCornerOpponents(row, col) == 1) {
+        if (row == 0 && col == 0 && game.getCell(0, 0) != null) {
+            if (game.getCell(row, col).getPropertyColor() == 2) {
                 if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
                     board[row][col].setBackground(Color.pink);
                 }
             }
-        }  else if (row == board.length - 1 && col == 0) {
-            if (game.checkBottomLeftOpponents(row, col) == 1) {
+        } else if (row == 0 && col == board.length - 1 && game.getCell(row, col) != null) {
+            if (game.getCell(row, col).getPropertyColor() == 2) {
                 if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
                     board[row][col].setBackground(Color.pink);
                 }
             }
-        } else if (row == board.length - 1 && col == board.length - 1) {
-            if (game.checkBottomRightOpponents(row, col) == 1) {
+        }  else if (row == board.length - 1 && col == 0 && game.getCell(row, col) != null) {
+            if (game.getCell(row, col).getPropertyColor() == 2) {
                 if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
                     board[row][col].setBackground(Color.pink);
                 }
             }
-        } else if (row == 0) {
-            if (game.checkTopBorderForOpponents(row, col) == 1) {
+        } else if (row == board.length - 1 && col == board.length - 1 && game.getCell(row, col) != null) {
+            if (game.getCell(row, col).getPropertyColor() == 2) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.pink);
+                }
+            }
+        }
+
+        else if (row == 0 && game.getCell(row, col) != null) {
+
+            if (game.getCell(row, col).getPropertyColor() == 2) {
                 if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
                     board[row][col].setBackground(Color.decode("#e1e4af"));
                 }
-            } else if (game.checkTopBorderForOpponents(row, col) == 2) {
+            } else if (game.getCell(row, col).getPropertyColor() == 3) {
                 if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
                     board[row][col].setBackground(Color.pink);
                 }
             }
-        } else if (col == 0) {
-            if (game.checkLeftBorderForOpponents(row, col) == 1) {
+        } else if (col == 0 && game.getCell(row, col) != null) {
+            if (game.getCell(row, col).getPropertyColor() == 2) {
                 if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
                     board[row][col].setBackground(Color.decode("#e1e4af"));
                 }
-            } else if (game.checkLeftBorderForOpponents(row, col) == 2) {
+            } else if (game.getCell(row, col).getPropertyColor() == 3) {
                 if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
                     board[row][col].setBackground(Color.pink);
                 }
             }
-        } else if (row == board.length - 1) {
-            if (game.checkBottomBorderForOpponents(row, col) == 1) {
+        } else if (row == board.length - 1 && game.getCell(row, col) != null) {
+            if (game.getCell(row, col).getPropertyColor() == 2) {
                 if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
                     board[row][col].setBackground(Color.decode("#e1e4af"));
                 }
-            } else if (game.checkBottomBorderForOpponents(row, col) == 2) {
+            } else if (game.getCell(row, col).getPropertyColor() == 3) {
                 if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
                     board[row][col].setBackground(Color.pink);
                 }
             }
-        } else if (col == board.length - 1) {
-            if (game.checkRightBorderForOpponents(row, col) == 1) {
+        } else if (col == board.length - 1 && game.getCell(row, col) != null) {
+            if (game.getCell(row, col).getPropertyColor() == 2) {
                 if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
                     board[row][col].setBackground(Color.decode("#e1e4af"));
                 }
-            } else if (game.checkRightBorderForOpponents(row, col) == 2) {
+            } else if (game.getCell(row, col).getPropertyColor() == 3) {
                 if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
                     board[row][col].setBackground(Color.pink);
                 }
             }
-        } else {
-            if (game.checkMiddleForOpponents(row, col) == 1) {
+        } else if (row != 0 && col != 0 && row != board.length - 1 && col != board.length - 1 && game.getCell(row, col) != null){
+            if (game.getCell(row, col).getPropertyColor() == 2) {
                 if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
                     board[row][col].setBackground(Color.decode("#b4d88d"));
                 }
-            } else if (game.checkMiddleForOpponents(row, col) == 2) {
+            } else if (game.getCell(row, col).getPropertyColor() == 3) {
                 if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
                     board[row][col].setBackground(Color.decode("#e1e4af"));
                 }
-            } else if (game.checkMiddleForOpponents(row, col) == 3) {
+            } else if (game.getCell(row, col).getPropertyColor() == 4) {
                 if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
                     board[row][col].setBackground(Color.pink);
                 }

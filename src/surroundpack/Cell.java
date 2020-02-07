@@ -8,9 +8,8 @@ public class Cell extends JButton {
 
 	private int propertyColor;
 
-	private int numSurroundingCells;
-
 	private int row;
+
 	private int col;
 	/*
 	 *  First, the Surround4 game class will only use the player
@@ -31,8 +30,7 @@ public class Cell extends JButton {
 	public Cell(int playerNumber) {
 		super();
 		this.playerNumber = playerNumber;
-		this.propertyColor = 0;
-		this.numSurroundingCells = 0;
+		this.propertyColor = 1;
 	}
 	
 	public int getPlayerNumber() {
@@ -46,14 +44,6 @@ public class Cell extends JButton {
 
 	public int getPropertyColor() {
 		return propertyColor;
-	}
-
-	public void setNumSurroundingCells(int numSurroundingCells) {
-		this.numSurroundingCells = numSurroundingCells;
-	}
-
-	public int getNumSurroundingCells() {
-		return numSurroundingCells;
 	}
 
 	public void setRow(int row) {
