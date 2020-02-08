@@ -2699,14 +2699,15 @@ public class Surround4Game {
 						}
 					}
 				}
-				//TODO FINISH THE CHECK FOR SURROUNDED NULL SQUARES
+
 				//top border case (excluding corners)
-				if (row == 0 && col != board.length - 1 && col != 0) {
+				if (row == 0 && col != board.length - 1 && col != 0 && board[row][col] != null) {
 					//Are the cells directly to the left, right, and below empty?
 					if (board[0][col - 1] != null && board[0][col + 1] != null && board[row + 1][col] != null) {
 						//Are these cells occupied by the same player?
 						if (board[0][col - 1].getPlayerNumber() == board[0][col + 1].getPlayerNumber() &&
-								board[0][col - 1].getPlayerNumber() == board[row + 1][col].getPlayerNumber()) {
+								board[0][col - 1].getPlayerNumber() == board[row + 1][col].getPlayerNumber() &&
+								board[0][col - 1].getPlayerNumber() != board[row][col].getPlayerNumber()) {
 									//Player has one, returns their player number
 									return board[0][col - 1].getPlayerNumber();
 						}
@@ -2714,12 +2715,13 @@ public class Surround4Game {
 				}
 
 				//right border case (excluding corners)
-				if (row != 0 && row != board.length - 1 && col == board.length - 1) {
+				if (row != 0 && row != board.length - 1 && col == board.length - 1 && board[row][col] != null) {
 					//Are the cells directly above, below, and to the right occupied?
 					if (board[row - 1][col] != null && board[row + 1][col] != null && board[row][col - 1] != null) {
 						//Are these cells occupied by the same player?
 						if (board[row - 1][col].getPlayerNumber() == board[row + 1][col].getPlayerNumber() &&
-								board[row - 1][col].getPlayerNumber() == board[row][col - 1].getPlayerNumber()) {
+								board[row - 1][col].getPlayerNumber() == board[row][col - 1].getPlayerNumber() &&
+								board[row - 1][col].getPlayerNumber() != board[row][col].getPlayerNumber()) {
 									//Player has won, returns their player number
 									return board[row - 1][col].getPlayerNumber();
 						}
@@ -2727,12 +2729,13 @@ public class Surround4Game {
 				}
 
 				//bottom border case (excluding corners)
-				if (row == board.length - 1 && col != board.length - 1 && col != 0) {
+				if (row == board.length - 1 && col != board.length - 1 && col != 0 && board[row][col] != null) {
 					//Are the cells directly to the left, right, and above empty?
 					if (board[board.length - 1][col - 1] != null && board[board.length - 1][col + 1] != null && board[row - 1][col] != null) {
 						//Are these cells occupied by the same player?
 						if (board[board.length - 1][col - 1].getPlayerNumber() == board[board.length - 1][col + 1].getPlayerNumber() &&
-								board[board.length - 1][col - 1].getPlayerNumber() == board[row - 1][col].getPlayerNumber()) {
+								board[board.length - 1][col - 1].getPlayerNumber() == board[row - 1][col].getPlayerNumber() &&
+								board[board.length - 1][col - 1].getPlayerNumber() != board[row][col].getPlayerNumber()) {
 							//Player has won, returns their player number
 							return board[board.length - 1][col - 1].getPlayerNumber();
 						}
@@ -2742,14 +2745,15 @@ public class Surround4Game {
 				//middle of board case (excluding corners and borders)
 
 
-				if (row != 0 && row != board.length - 1 && col != 0 && col != board.length - 1) {
+				if (row != 0 && row != board.length - 1 && col != 0 && col != board.length - 1 && board[row][col] != null) {
 					//Are the four cells directly surrounding this cell empty?
 					if (board[row - 1][col] != null && board[row][col + 1] != null && board[row + 1][col] != null
 							&& board[row][col - 1] != null) {
 						//Are these cells occupied by the same player?
 						if (board[row - 1][col].getPlayerNumber() == board[row][col + 1].getPlayerNumber()
 								&& board[row - 1][col].getPlayerNumber() == board[row + 1][col].getPlayerNumber()
-								&& board[row - 1][col].getPlayerNumber() == board[row][col - 1].getPlayerNumber()) {
+								&& board[row - 1][col].getPlayerNumber() == board[row][col - 1].getPlayerNumber()
+								&& board[row - 1][col].getPlayerNumber() != board[row][col].getPlayerNumber()) {
 							//Player has won, returns their player number
 							return board[row - 1][col].getPlayerNumber();
 						}
