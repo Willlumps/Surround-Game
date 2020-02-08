@@ -273,7 +273,7 @@ public class Surround4Game {
 
 	}
 
-	public void checkTopBorderForOpponents(int row, int col) {
+	public int checkTopBorderForOpponents(int row, int col) {
 		int count = 1;
 		ArrayList<Integer> opp = new ArrayList<Integer>();
 
@@ -289,16 +289,17 @@ public class Surround4Game {
 			count++;
 			opp.add(board[row][col + 1].getPlayerNumber());
 		}
-
 		if (sameOpponents(opp)) {
 			board[row][col].setPropertyColor(count);
+			return 1;
 		} else {
 			board[row][col].setPropertyColor(1);
+			return -1;
 		}
 
 	}
 
-	public void checkLeftBorderForOpponents(int row, int col) {
+	public int checkLeftBorderForOpponents(int row, int col) {
 		int count = 1;
 		ArrayList<Integer> opp = new ArrayList<Integer>();
 
@@ -317,12 +318,14 @@ public class Surround4Game {
 
 		if (sameOpponents(opp)) {
 			board[row][col].setPropertyColor(count);
+			return 1;
 		} else {
 			board[row][col].setPropertyColor(1);
+			return -1;
 		}
 	}
 
-	public void checkBottomBorderForOpponents(int row, int col) {
+	public int checkBottomBorderForOpponents(int row, int col) {
 		int count = 1;
 		ArrayList<Integer> opp = new ArrayList<Integer>();
 
@@ -341,12 +344,14 @@ public class Surround4Game {
 
 		if (sameOpponents(opp)) {
 			board[row][col].setPropertyColor(count);
+			return 1;
 		} else {
 			board[row][col].setPropertyColor(1);
+			return -1;
 		}
 	}
 
-	public void checkRightBorderForOpponents(int row, int col) {
+	public int checkRightBorderForOpponents(int row, int col) {
 		int count = 1;
 		ArrayList<Integer> opp = new ArrayList<Integer>();
 
@@ -365,12 +370,14 @@ public class Surround4Game {
 
 		if (sameOpponents(opp)) {
 			board[row][col].setPropertyColor(count);
+			return 1;
 		} else {
 			board[row][col].setPropertyColor(1);
+			return -1;
 		}
 	}
 
-	public void checkMiddleForOpponents(int row, int col) {
+	public int checkMiddleForOpponents(int row, int col) {
 		int count = 1;
 		ArrayList<Integer> opp = new ArrayList<Integer>();
 
@@ -393,8 +400,10 @@ public class Surround4Game {
 
 		if (sameOpponents(opp)) {
 			board[row][col].setPropertyColor(count);
+			return 1;
 		} else {
 			board[row][col].setPropertyColor(1);
+			return -1;
 		}
 
 	}
@@ -536,8 +545,8 @@ public class Surround4Game {
 
 	public Cell AI() {
 
-		//These nested loops will check for winnable moves for either the AI or the player and attempt play a winning
-		//move or attempt to block one.
+		//First the AI will check for winnable moves for the AI, if an immediate win is not found it will attempt to
+		//block the player if they are about to win in the following turn.
 		for (int row = 0; row < board.length; row++) {
 			for (int col = 0; col < board.length; col++) {
 
@@ -606,7 +615,6 @@ public class Surround4Game {
 
 						//Top Border Win AI
 						else if (row == 0) {
-							System.out.print(board[row][col].getPropertyColor() + " ");
 							if (checkAIWin(row, col) == 2) {
 								if (getCell(row + 1, col) == null && getCell(row, col - 1).getPlayerNumber()
 										== 1 && getCell(row, col + 1).getPlayerNumber() == 1) {
@@ -725,7 +733,7 @@ public class Surround4Game {
 						}
 					}
 
-					/** If no winnable move was found, it will next check for a winning move for the opening in an attempt
+					/** If no winnable move was found, it will next check for a winning move for the player in an attempt
 					 * to block it */
 
 					if (getCell(row, col) != null && getCell(row, col).getPlayerNumber() == 1) {
@@ -920,8 +928,8 @@ public class Surround4Game {
 			}
 		}
 
-		//These nested loops are for if no winnable move or blocking move was found.
-		//The AI will look for an opponents tile that has two open playable sides
+		//If no winning move or block was found
+		//the AI will look for an opponents tile that has two open playable sides
 		//and play one of these two tiles at random to set up for a winning move
 		//on its next turn.
 		//If none were found it will look for one of its own tiles surrounded by
@@ -933,6 +941,388 @@ public class Surround4Game {
 				if (getCurrentPlayer() == 1) {
 					if (getCell(row, col) != null && getCell(row, col).getPlayerNumber() == 2) {
 
+						//Top Left Corner
+						if (row == 0 & col == 0) {
+							if (checkAIWin(0, 0) == 0) {
+								if (rand < .5) {
+									if (select(row + 1, col)) {
+										return board[row + 1][col];
+									}
+								} else {
+									if (select(row, col + 1)) {
+										return board[row][col + 1];
+									}
+								}
+							}
+						}
+						//Top Right Corner
+						else if (row == 0 && col == board.length - 1) {
+							if (checkAIWin(0, board.length - 1) == 0) {
+								if (rand < .5) {
+									if (select(row + 1, col)) {
+										return board[row + 1][col];
+									}
+								} else {
+									if (select(row, col - 1)) {
+										return board[row][col - 1];
+									}
+								}
+							}
+						}
+						//Bottom Left Corner
+						else if (row == board.length - 1 && col == 0) {
+							if (checkAIWin(board.length - 1, 0) == 0) {
+								if (rand < .5) {
+									if (select(row - 1, col)) {
+										return board[row - 1][col];
+									}
+								} else {
+									if (select(row, col + 1)) {
+										return board[row][col + 1];
+									}
+								}
+							}
+						}
+						//Bottom Right Corner
+						else if (row == board.length - 1 && col == board.length - 1) {
+							if (checkAIWin(board.length - 1, board.length - 1) == 0) {
+
+
+								if (rand < .5) {
+									if (select(row - 1, col)) {
+										return board[row - 1][col];
+									}
+								} else {
+									if (select(row, col - 1)) {
+										return board[row][col - 1];
+									}
+								}
+							}
+						}
+						//Top Border
+						else if (row == 0) {
+							if (checkAIWin(row, col) == 1) {
+								if (checkTopBorderForOpponents(row, col) == -1) {
+									if (rand < .33) {
+										if (select(row, col - 1)) {
+											return board[row][col - 1];
+										} else {
+											if (rand < .15) {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											} else {
+												if (select(row , col + 1)) {
+													return board[row][col + 1];
+												}
+											}
+										}
+									} else if (rand >= .33 && rand < .66) {
+										if (select(row + 1, col)) {
+											return board[row + 1][col];
+										} else {
+											if (rand >= .33 && rand < .48) {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											} else {
+												if (select(row , col + 1)) {
+													return board[row][col + 1];
+												}
+											}
+										}
+									} else {
+										if (select(row , col + 1)) {
+											return board[row][col + 1];
+										} else {
+											if (rand >= .66 && rand < .81) {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											} else {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+						//Right Border
+						else if (col == board.length - 1) {
+							if (checkAIWin(row, col) == 1) {
+								if (checkRightBorderForOpponents(row, col) == -1) {
+									if (rand < .33) {
+										if (select(row, col - 1)) {
+											return board[row][col - 1];
+										} else {
+											if (rand < .15) {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											} else {
+												if (select(row - 1 , col)) {
+													return board[row - 1][col];
+												}
+											}
+										}
+									} else if (rand >= .33 && rand < .66) {
+										if (select(row + 1, col)) {
+											return board[row + 1][col];
+										} else {
+											if (rand >= .33 && rand < .48) {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											} else {
+												if (select(row - 1 , col)) {
+													return board[row - 1][col];
+												}
+											}
+										}
+									} else {
+										if (select(row - 1 , col)) {
+											return board[row - 1][col];
+										} else {
+											if (rand >= .66 && rand < .81) {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											} else {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+						//Bottom Border
+						else if (row == board.length - 1) {
+							if (checkAIWin(row, col) == 1) {
+								if (checkBottomBorderForOpponents(row, col) == -1) {
+									if (rand < .33) {
+										if (select(row, col - 1)) {
+											return board[row][col - 1];
+										} else {
+											if (rand < .15) {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											} else {
+												if (select(row , col + 1)) {
+													return board[row][col + 1];
+												}
+											}
+										}
+									} else if (rand >= .33 && rand < .66) {
+										if (select(row - 1, col)) {
+											return board[row - 1][col];
+										} else {
+											if (rand >= .33 && rand < .48) {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											} else {
+												if (select(row , col + 1)) {
+													return board[row][col + 1];
+												}
+											}
+										}
+									} else {
+										if (select(row , col + 1)) {
+											return board[row][col + 1];
+										} else {
+											if (rand >= .66 && rand < .81) {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											} else {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											}
+										}
+									}
+								}
+
+							}
+						}
+						//Left Border
+						else if (col == 0) {
+							if (checkAIWin(row, col) == 1) {
+								if (checkLeftBorderForOpponents(row, col) == -1) {
+									if (rand < .33) {
+										if (select(row - 1, col)) {
+											return board[row - 1][col];
+										} else {
+											if (rand < .15) {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											} else {
+												if (select(row , col + 1)) {
+													return board[row][col + 1];
+												}
+											}
+										}
+									} else if (rand >= .33 && rand < .66) {
+										if (select(row + 1, col)) {
+											return board[row + 1][col];
+										} else {
+											if (rand >= .33 && rand < .48) {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											} else {
+												if (select(row , col + 1)) {
+													return board[row][col + 1];
+												}
+											}
+										}
+									} else {
+										if (select(row , col + 1)) {
+											return board[row][col + 1];
+										} else {
+											if (rand >= .66 && rand < .81) {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											} else {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+						//Middle Board
+						else if (row != board.length - 1 && col != board.length - 1){
+							if (checkAIWin(row, col) == 2) {
+								if (checkMiddleForOpponents(row, col) == -1) {
+									if (rand < .25) {
+										if (select(row - 1, col)) {
+											return board[row - 1][col];
+										} else if (rand < .12) {
+											if (select(row, col + 1)) {
+												return board[row][col + 1];
+											} else if (rand < .06) {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											} else {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											}
+										} else {
+											if (select(row, col + 1)) {
+												return board[row][col + 1];
+											} else if (rand < .18) {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											} else {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											}
+										}
+									} else if (rand >= .25 && rand < .5) {
+										if (select(row, col + 1)) {
+											return board[row][col + 1];
+										} else if (rand < .37) {
+											if (select(row + 1, col)) {
+												return board[row + 1][col];
+											} else if (rand < .31) {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											} else {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											}
+										} else {
+											if (select(row + 1, col)) {
+												return board[row + 1][col];
+											} else if (rand < .43) {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											} else {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											}
+										}
+									} else if (rand >= .5 && rand < .75) {
+										if (select(row + 1, col)) {
+											return board[row + 1][col];
+										} else if (rand < .62) {
+											if (select(row, col - 1)) {
+												return board[row][col - 1];
+											} else if (rand < .56) {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											} else {
+												if (select(row, col + 1)) {
+													return board[row][col + 1];
+												}
+											}
+										} else {
+											if (select(row, col - 1)) {
+												return board[row][col - 1];
+											} else if (rand < .68) {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											} else {
+												if (select(row, col + 1)) {
+													return board[row][col + 1];
+												}
+											}
+										}
+									} else {
+										if (select(row, col - 1)) {
+											return board[row][col - 1];
+										} else if (rand < .87) {
+											if (select(row - 1, col)) {
+												return board[row - 1][col];
+											} else if (rand < .81) {
+												if (select(row, col + 1)) {
+													return board[row][col + 1];
+												}
+											} else {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											}
+										} else {
+											if (select(row - 1, col)) {
+												return board[row - 1][col];
+											} else if (rand < .93) {
+												if (select(row, col + 1)) {
+													return board[row][col + 1];
+												}
+											} else {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+					/** AI will once again attempt to block the player */
+					else if ((getCell(row, col) != null && getCell(row, col).getPlayerNumber() == 1)) {
 						//Top Left Corner
 						if (row == 0 & col == 0) {
 							if (checkAIWin(0, 0) == 0) {
@@ -991,7 +1381,343 @@ public class Surround4Game {
 						}
 						//Top Border
 						else if (row == 0) {
-							if (checkAIWin(row, col) == 1) {
+							if (getCell(row, col).getPropertyColor() == 2) {
+								if (checkTopBorderForOpponents(row, col) == 1) {
+									if (rand < .33) {
+										if (select(row, col - 1)) {
+											return board[row][col - 1];
+										} else {
+											if (rand < .15) {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											} else {
+												if (select(row , col + 1)) {
+													return board[row][col + 1];
+												}
+											}
+										}
+									} else if (rand >= .33 && rand < .66) {
+										if (select(row + 1, col)) {
+											return board[row + 1][col];
+										} else {
+											if (rand >= .33 && rand < .48) {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											} else {
+												if (select(row , col + 1)) {
+													return board[row][col + 1];
+												}
+											}
+										}
+									} else {
+										if (select(row , col + 1)) {
+											return board[row][col + 1];
+										} else {
+											if (rand >= .66 && rand < .81) {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											} else {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+						//Right Border
+						else if (col == board.length - 1) {
+							if (getCell(row, col).getPropertyColor() == 2) {
+								if (checkRightBorderForOpponents(row, col) == 1) {
+									if (rand < .33) {
+										if (select(row, col - 1)) {
+											return board[row][col - 1];
+										} else {
+											if (rand < .15) {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											} else {
+												if (select(row - 1 , col)) {
+													return board[row - 1][col];
+												}
+											}
+										}
+									} else if (rand >= .33 && rand < .66) {
+										if (select(row + 1, col)) {
+											return board[row + 1][col];
+										} else {
+											if (rand >= .33 && rand < .48) {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											} else {
+												if (select(row - 1 , col)) {
+													return board[row - 1][col];
+												}
+											}
+										}
+									} else {
+										if (select(row - 1 , col)) {
+											return board[row - 1][col];
+										} else {
+											if (rand >= .66 && rand < .81) {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											} else {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+						//Bottom Border
+						else if (row == board.length - 1) {
+							if (getCell(row, col).getPropertyColor() == 2) {
+								if (checkBottomBorderForOpponents(row, col) == 1) {
+									if (rand < .33) {
+										if (select(row, col - 1)) {
+											return board[row][col - 1];
+										} else {
+											if (rand < .15) {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											} else {
+												if (select(row , col + 1)) {
+													return board[row][col + 1];
+												}
+											}
+										}
+									} else if (rand >= .33 && rand < .66) {
+										if (select(row - 1, col)) {
+											return board[row - 1][col];
+										} else {
+											if (rand >= .33 && rand < .48) {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											} else {
+												if (select(row , col + 1)) {
+													return board[row][col + 1];
+												}
+											}
+										}
+									} else {
+										if (select(row , col + 1)) {
+											return board[row][col + 1];
+										} else {
+											if (rand >= .66 && rand < .81) {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											} else {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											}
+										}
+									}
+								}
+
+							}
+						}
+						//Left Border
+						else if (col == 0) {
+							if (getCell(row, col).getPropertyColor() == 2) {
+								if (checkLeftBorderForOpponents(row, col) == 1) {
+									if (rand < .33) {
+										if (select(row - 1, col)) {
+											return board[row - 1][col];
+										} else {
+											if (rand < .15) {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											} else {
+												if (select(row , col + 1)) {
+													return board[row][col + 1];
+												}
+											}
+										}
+									} else if (rand >= .33 && rand < .66) {
+										if (select(row + 1, col)) {
+											return board[row + 1][col];
+										} else {
+											if (rand >= .33 && rand < .48) {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											} else {
+												if (select(row , col + 1)) {
+													return board[row][col + 1];
+												}
+											}
+										}
+									} else {
+										if (select(row , col + 1)) {
+											return board[row][col + 1];
+										} else {
+											if (rand >= .66 && rand < .81) {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											} else {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+						//Middle Board
+						else if (row != board.length - 1 && col != board.length - 1){
+							if (getCell(row, col).getPropertyColor() == 3) {
+								if (checkMiddleForOpponents(row, col) == 1) {
+									if (rand < .25) {
+										if (select(row - 1, col)) {
+											return board[row - 1][col];
+										} else if (rand < .12) {
+											if (select(row, col + 1)) {
+												return board[row][col + 1];
+											} else if (rand < .06) {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											} else {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											}
+										} else {
+											if (select(row, col + 1)) {
+												return board[row][col + 1];
+											} else if (rand < .18) {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											} else {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											}
+										}
+									} else if (rand >= .25 && rand < .5) {
+										if (select(row, col + 1)) {
+											return board[row][col + 1];
+										} else if (rand < .37) {
+											if (select(row + 1, col)) {
+												return board[row + 1][col];
+											} else if (rand < .31) {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											} else {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											}
+										} else {
+											if (select(row + 1, col)) {
+												return board[row + 1][col];
+											} else if (rand < .43) {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											} else {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											}
+										}
+									} else if (rand >= .5 && rand < .75) {
+										if (select(row + 1, col)) {
+											return board[row + 1][col];
+										} else if (rand < .62) {
+											if (select(row, col - 1)) {
+												return board[row][col - 1];
+											} else if (rand < .56) {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											} else {
+												if (select(row, col + 1)) {
+													return board[row][col + 1];
+												}
+											}
+										} else {
+											if (select(row, col - 1)) {
+												return board[row][col - 1];
+											} else if (rand < .68) {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											} else {
+												if (select(row, col + 1)) {
+													return board[row][col + 1];
+												}
+											}
+										}
+									} else {
+										if (select(row, col - 1)) {
+											return board[row][col - 1];
+										} else if (rand < .87) {
+											if (select(row - 1, col)) {
+												return board[row - 1][col];
+											} else if (rand < .81) {
+												if (select(row, col + 1)) {
+													return board[row][col + 1];
+												}
+											} else {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											}
+										} else {
+											if (select(row - 1, col)) {
+												return board[row - 1][col];
+											} else if (rand < .93) {
+												if (select(row, col + 1)) {
+													return board[row][col + 1];
+												}
+											} else {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		//If two open spots were not found on either the AI's tiles or the player's tiles
+		//the AI will then look for tiles with three open tiles following the same
+		//guidelines as before.
+
+		for (int row = 0; row < board.length; row++) {
+			for (int col = 0; col < board.length; col++) {
+				Double rand = Math.random();
+
+				if (getCurrentPlayer() == 1) {
+					if (getCell(row, col) != null && getCell(row, col).getPlayerNumber() == 2) {
+						//Top Border
+						if (row == 0) {
+							if (checkAIWin(row, col) == 0) {
 								if (rand < .33) {
 									if (select(row, col - 1)) {
 										return board[row][col - 1];
@@ -1035,11 +1761,12 @@ public class Surround4Game {
 										}
 									}
 								}
+
 							}
 						}
 						//Right Border
 						else if (col == board.length - 1) {
-							if (checkAIWin(row, col) == 1) {
+							if (checkAIWin(row, col) == 0) {
 								if (rand < .33) {
 									if (select(row, col - 1)) {
 										return board[row][col - 1];
@@ -1083,11 +1810,12 @@ public class Surround4Game {
 										}
 									}
 								}
+
 							}
 						}
 						//Bottom Border
 						else if (row == board.length - 1) {
-							if (checkAIWin(row, col) == 1) {
+							if (checkAIWin(row, col) == 0) {
 								if (rand < .33) {
 									if (select(row, col - 1)) {
 										return board[row][col - 1];
@@ -1135,7 +1863,7 @@ public class Surround4Game {
 						}
 						//Left Border
 						else if (col == 0) {
-							if (checkAIWin(row, col) == 1) {
+							if (checkAIWin(row, col) == 0) {
 								if (rand < .33) {
 									if (select(row - 1, col)) {
 										return board[row - 1][col];
@@ -1182,84 +1910,432 @@ public class Surround4Game {
 							}
 						}
 						//Middle Board
-						else if (row != 0 && col != 0 && row != board.length - 1 && col != board.length - 1){
-							if (checkAIWin(row, col) == 2) {
-								if (rand < .25) {
-									if (select(row - 1, col)) {
-										return board[row - 1][col];
-									} else {
-										if (rand < .12) {
+						else if (row != board.length - 1 && col != board.length - 1){
+							if (checkAIWin(row, col) == 1) {
+								if (checkMiddleForOpponents(row, col) == -1) {
+									if (rand < .25) {
+										if (select(row - 1, col)) {
+											return board[row - 1][col];
+										} else if (rand < .12) {
 											if (select(row, col + 1)) {
 												return board[row][col + 1];
+											} else if (rand < .06) {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
 											} else {
-												if (rand < .06) {
-													if (select(row + 1, col)) {
-														return board[row + 1][col];
-													}
-												} else {
-													if (select(row, col - 1)) {
-														return board[row][col - 1];
-													}
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											}
+										} else {
+											if (select(row, col + 1)) {
+												return board[row][col + 1];
+											} else if (rand < .18) {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											} else {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
 												}
 											}
 										}
-									}
-								} else if (rand >= .25 && rand < .5) {
-									if (select(row, col + 1)) {
-										return board[row][col + 1];
+									} else if (rand >= .25 && rand < .5) {
+										if (select(row, col + 1)) {
+											return board[row][col + 1];
+										} else if (rand < .37) {
+											if (select(row + 1, col)) {
+												return board[row + 1][col];
+											} else if (rand < .31) {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											} else {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											}
+										} else {
+											if (select(row + 1, col)) {
+												return board[row + 1][col];
+											} else if (rand < .43) {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											} else {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											}
+										}
+									} else if (rand >= .5 && rand < .75) {
+										if (select(row + 1, col)) {
+											return board[row + 1][col];
+										} else if (rand < .62) {
+											if (select(row, col - 1)) {
+												return board[row][col - 1];
+											} else if (rand < .56) {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											} else {
+												if (select(row, col + 1)) {
+													return board[row][col + 1];
+												}
+											}
+										} else {
+											if (select(row, col - 1)) {
+												return board[row][col - 1];
+											} else if (rand < .68) {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											} else {
+												if (select(row, col + 1)) {
+													return board[row][col + 1];
+												}
+											}
+										}
 									} else {
-										if (rand >= .25 && rand < .37) {
+										if (select(row, col - 1)) {
+											return board[row][col - 1];
+										} else if (rand < .87) {
 											if (select(row - 1, col)) {
 												return board[row - 1][col];
+											} else if (rand < .81) {
+												if (select(row, col + 1)) {
+													return board[row][col + 1];
+												}
 											} else {
-												if (rand >= .25 && rand < .32) {
-													if (select(row + 1, col)) {
-														return board[row + 1][col];
-													}
-												} else {
-													if (select(row, col - 1)) {
-														return board[row][col - 1];
-													}
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											}
+										} else {
+											if (select(row - 1, col)) {
+												return board[row - 1][col];
+											} else if (rand < .93) {
+												if (select(row, col + 1)) {
+													return board[row][col + 1];
+												}
+											} else {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
 												}
 											}
 										}
 									}
-								} else if (rand >= .5 && rand < .75) {
+								}
+							}
+						}
+					}
+					/** Attempting to block yet again */
+					else if (getCell(row, col) != null && getCell(row, col).getPlayerNumber() == 1) {
+						//Top Border
+						if (row == 0) {
+							if (rand < .33) {
+								if (select(row, col - 1)) {
+									return board[row][col - 1];
+								} else {
+									if (rand < .15) {
+										if (select(row + 1, col)) {
+											return board[row + 1][col];
+										}
+									} else {
+										if (select(row , col + 1)) {
+											return board[row][col + 1];
+										}
+									}
+								}
+							} else if (rand >= .33 && rand < .66) {
+								if (select(row + 1, col)) {
+									return board[row + 1][col];
+								} else {
+									if (rand >= .33 && rand < .48) {
+										if (select(row, col - 1)) {
+											return board[row][col - 1];
+										}
+									} else {
+										if (select(row , col + 1)) {
+											return board[row][col + 1];
+										}
+									}
+								}
+							} else {
+								if (select(row , col + 1)) {
+									return board[row][col + 1];
+								} else {
+									if (rand >= .66 && rand < .81) {
+										if (select(row, col - 1)) {
+											return board[row][col - 1];
+										}
+									} else {
+										if (select(row + 1, col)) {
+											return board[row + 1][col];
+										}
+									}
+								}
+							}
+
+						}
+						//Right Border
+						else if (col == board.length - 1) {
+							if (getCell(row, col).getPropertyColor() == 1) {
+								if (rand < .33) {
+									if (select(row, col - 1)) {
+										return board[row][col - 1];
+									} else {
+										if (rand < .15) {
+											if (select(row + 1, col)) {
+												return board[row + 1][col];
+											}
+										} else {
+											if (select(row - 1 , col)) {
+												return board[row - 1][col];
+											}
+										}
+									}
+								} else if (rand >= .33 && rand < .66) {
 									if (select(row + 1, col)) {
 										return board[row + 1][col];
 									} else {
-										if (rand >= .5 && rand < .62) {
-											if (select(row - 1, col)) {
+										if (rand >= .33 && rand < .48) {
+											if (select(row, col - 1)) {
+												return board[row][col - 1];
+											}
+										} else {
+											if (select(row - 1 , col)) {
 												return board[row - 1][col];
-											} else {
-												if (rand >= .5 && rand < .56) {
-													if (select(row, col + 1)) {
-														return board[row][col + 1];
-													}
-												} else {
-													if (select(row, col - 1)) {
-														return board[row][col - 1];
-													}
-												}
 											}
 										}
 									}
 								} else {
+									if (select(row - 1 , col)) {
+										return board[row - 1][col];
+									} else {
+										if (rand >= .66 && rand < .81) {
+											if (select(row, col - 1)) {
+												return board[row][col - 1];
+											}
+										} else {
+											if (select(row + 1, col)) {
+												return board[row + 1][col];
+											}
+										}
+									}
+								}
+							}
+						}
+						//Bottom Border
+						else if (row == board.length - 1) {
+							if (getCell(row, col).getPropertyColor() == 1) {
+								if (rand < .33) {
 									if (select(row, col - 1)) {
 										return board[row][col - 1];
 									} else {
-										if (rand >= .75 && rand < .87) {
+										if (rand < .15) {
 											if (select(row - 1, col)) {
 												return board[row - 1][col];
+											}
+										} else {
+											if (select(row , col + 1)) {
+												return board[row][col + 1];
+											}
+										}
+									}
+								} else if (rand >= .33 && rand < .66) {
+									if (select(row - 1, col)) {
+										return board[row - 1][col];
+									} else {
+										if (rand >= .33 && rand < .48) {
+											if (select(row, col - 1)) {
+												return board[row][col - 1];
+											}
+										} else {
+											if (select(row , col + 1)) {
+												return board[row][col + 1];
+											}
+										}
+									}
+								} else {
+									if (select(row , col + 1)) {
+										return board[row][col + 1];
+									} else {
+										if (rand >= .66 && rand < .81) {
+											if (select(row, col - 1)) {
+												return board[row][col - 1];
+											}
+										} else {
+											if (select(row - 1, col)) {
+												return board[row - 1][col];
+											}
+										}
+									}
+								}
+							}
+						}
+						//Left Border
+						else if (col == 0) {
+							if (getCell(row, col).getPropertyColor() == 1) {
+								if (rand < .33) {
+									if (select(row - 1, col)) {
+										return board[row - 1][col];
+									} else {
+										if (rand < .15) {
+											if (select(row + 1, col)) {
+												return board[row + 1][col];
+											}
+										} else {
+											if (select(row , col + 1)) {
+												return board[row][col + 1];
+											}
+										}
+									}
+								} else if (rand >= .33 && rand < .66) {
+									if (select(row + 1, col)) {
+										return board[row + 1][col];
+									} else {
+										if (rand >= .33 && rand < .48) {
+											if (select(row - 1, col)) {
+												return board[row - 1][col];
+											}
+										} else {
+											if (select(row , col + 1)) {
+												return board[row][col + 1];
+											}
+										}
+									}
+								} else {
+									if (select(row , col + 1)) {
+										return board[row][col + 1];
+									} else {
+										if (rand >= .66 && rand < .81) {
+											if (select(row - 1, col)) {
+												return board[row - 1][col];
+											}
+										} else {
+											if (select(row + 1, col)) {
+												return board[row + 1][col];
+											}
+										}
+									}
+								}
+							}
+						}
+						//Middle Board
+						else if (row != board.length - 1 && col != board.length - 1){
+							if (getCell(row, col).getPropertyColor() == 2) {
+								if (checkMiddleForOpponents(row, col) == 1) {
+									if (rand < .25) {
+										if (select(row - 1, col)) {
+											return board[row - 1][col];
+										} else if (rand < .12) {
+											if (select(row, col + 1)) {
+												return board[row][col + 1];
+											} else if (rand < .06) {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
 											} else {
-												if (rand >= .75 && rand < .81) {
-													if (select(row, col + 1)) {
-														return board[row][col + 1];
-													}
-												} else {
-													if (select(row + 1, col)) {
-														return board[row + 1][col];
-													}
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											}
+										} else {
+											if (select(row, col + 1)) {
+												return board[row][col + 1];
+											} else if (rand < .18) {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											} else {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											}
+										}
+									} else if (rand >= .25 && rand < .5) {
+										if (select(row, col + 1)) {
+											return board[row][col + 1];
+										} else if (rand < .37) {
+											if (select(row + 1, col)) {
+												return board[row + 1][col];
+											} else if (rand < .31) {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											} else {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											}
+										} else {
+											if (select(row + 1, col)) {
+												return board[row + 1][col];
+											} else if (rand < .43) {
+												if (select(row, col - 1)) {
+													return board[row][col - 1];
+												}
+											} else {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											}
+										}
+									} else if (rand >= .5 && rand < .75) {
+										if (select(row + 1, col)) {
+											return board[row + 1][col];
+										} else if (rand < .62) {
+											if (select(row, col - 1)) {
+												return board[row][col - 1];
+											} else if (rand < .56) {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											} else {
+												if (select(row, col + 1)) {
+													return board[row][col + 1];
+												}
+											}
+										} else {
+											if (select(row, col - 1)) {
+												return board[row][col - 1];
+											} else if (rand < .68) {
+												if (select(row - 1, col)) {
+													return board[row - 1][col];
+												}
+											} else {
+												if (select(row, col + 1)) {
+													return board[row][col + 1];
+												}
+											}
+										}
+									} else {
+										if (select(row, col - 1)) {
+											return board[row][col - 1];
+										} else if (rand < .87) {
+											if (select(row - 1, col)) {
+												return board[row - 1][col];
+											} else if (rand < .81) {
+												if (select(row, col + 1)) {
+													return board[row][col + 1];
+												}
+											} else {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
+												}
+											}
+										} else {
+											if (select(row - 1, col)) {
+												return board[row - 1][col];
+											} else if (rand < .93) {
+												if (select(row, col + 1)) {
+													return board[row][col + 1];
+												}
+											} else {
+												if (select(row + 1, col)) {
+													return board[row + 1][col];
 												}
 											}
 										}
@@ -1271,6 +2347,54 @@ public class Surround4Game {
 				}
 			}
 		}
+
+		//Next is to check for a standalone player tile somewhere in the middle of the board
+		for (int row = 0; row < board.length; row++) {
+			for (int col = 0; col < board.length; col++) {
+				Double rand = Math.random();
+
+				if (getCurrentPlayer() == 1) {
+					if (getCell(row, col) != null && getCell(row, col).getPlayerNumber() == 2) {
+
+						//Middle Board
+						if (row != board.length - 1 && col != board.length - 1){
+							if (checkAIWin(row, col) == 0) {
+								if (rand < .25) {
+									if (select(row - 1, col)) {
+										return board[row - 1][col];
+									}
+								} else if (rand >= .25 && rand < .5) {
+									if (select(row, col + 1)) {
+										return board[row][col + 1];
+									}
+								} else if (rand >= .5 && rand < .75) {
+									if (select(row + 1, col)) {
+										return board[row + 1][col];
+									}
+								} else {
+									if (select(row, col - 1)) {
+										return board[row][col - 1];
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		//If none of the above works, and you're reading this, send help.
+		if (getCurrentPlayer() == 1) {
+			Random rand = new Random();
+
+			int randRow = rand.nextInt((board.length - 1) + 1);
+			int randCol = rand.nextInt((board.length - 1) + 1);
+
+			if (select(randRow, randCol)) {
+				return board[randRow][randCol];
+			}
+		}
+
 
 
 		return null;

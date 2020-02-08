@@ -15,6 +15,15 @@ public class Surround4Panel extends JPanel {
     /* Panel that will contain all of the games JButtons */
     private JPanel panel1;
 
+    /* Panel that keeps track of the number of wins each player has */
+    private JPanel panel2;
+
+    /* Array of JLabels that displays the number of wins each player has */
+    private JLabel[] wins;
+
+    /* Map that whose Key is the player number and Value is their number of wins */
+    private Map<String, Integer> win;
+
     /* The player of the game */
     private int player;
 
@@ -32,6 +41,9 @@ public class Surround4Panel extends JPanel {
 
     /* Surround game that holds the game logic */
     private Surround4Game game;
+
+    /* Boolean value that determines if the computer will make a play or not */
+    private static boolean AI = false;
 
 
     /**
@@ -59,11 +71,14 @@ public class Surround4Panel extends JPanel {
         //Creates new panel for the game
         panel1 = new JPanel();
 
+        panel2 = new JPanel(new GridLayout(0, 1));
+
         //Sets up the game board with input received from the user
         setUpGame();
 
         //centers the panel in the middle of the frame
         add(panel1, BorderLayout.CENTER);
+        add(panel2, BorderLayout.PAGE_END);
 
         //action listeners for the menu items
 		quitItem.addActionListener(listen);
@@ -170,6 +185,34 @@ public class Surround4Panel extends JPanel {
             JOptionPane.showMessageDialog(null, "Invalid player, Player 1 will start");
             game.setPlayer(1);
         }
+
+        //If the number of players is two, prompt the user if they would like to play against the computer
+        if (game.getNumPlayers() == 2) {
+            int dialogResult = JOptionPane.showConfirmDialog (null, "Would you like to play against the computer?");
+            //If yes, sets the AI value to true
+            //If this value is true it will allow the AI method to execute;
+            if(dialogResult == JOptionPane.YES_OPTION){
+                AI = true;
+            }
+
+            //If the computer is to make the first move, a random square will be selected on the board
+            if (game.getFirstPlayer() == 1) {
+                Random rand = new Random();
+
+                //Random number between 0 and the board length - 1 are generated for the first play.
+                int randRow = rand.nextInt(board.length - 1);
+                int randCol = rand.nextInt(board.length - 1);
+
+                //Sets the tile and switches to the next player
+                if (game.select(randRow, randCol)) {
+                    board[randRow][randCol].setText("" + game.getCurrentPlayer());
+                    player = game.nextPlayer();
+                }
+            }
+        }
+
+        //Sets up the panel that displays the number of wins each player has
+        createWinners(game.getNumPlayers());
     }
 
 
@@ -261,9 +304,32 @@ public class Surround4Panel extends JPanel {
                 resetBack(board.length);
                 displayBoard(board.length);
                 game.setPlayer(game.getFirstPlayer());
+
+                //Loops through the players and updates the win total if they won the previous match.
+                for (int i = 1; i < game.getNumPlayers() + 1; i++) {
+                    if (winner == i) {
+                        //replaces the value (number of wins) with the previous amount plus one
+                        win.replace("" + i, win.get("" + i) + 1);
+                    }
+                    //updates the JLabels to display the correct number of wins.
+                    wins[i].setText("Player " + i + " Wins: " + win.get("" + i));
+                }
             }
         }
     }
+
+
+    /**
+     *  Changes the background color of the game tiles depending on whose turn it is and the risk level with respect
+     *  to how close that tile is to being surrounded.
+     *  Green indicates low risk.
+     *  Yellow indicates medium risk.
+     *  Red indicates high risk, this tile is about to be surrounded
+     *
+     * @param row The row that the tile is located in
+     * @param col The col that the tile is located in
+     *
+     */
 
     private void paintBackground(int row, int col) {
 
@@ -351,8 +417,16 @@ public class Surround4Panel extends JPanel {
         }
     }
 
-    private void AI() {
 
+    /**
+     *  If the AI is enabled, displays the latest move that the computer has completed.
+     *
+     */
+
+    private void AI() {
+        if (AI == false) {
+            return;
+        }
         Cell nextMove = game.AI();
 
         if (nextMove != null) {
@@ -361,6 +435,12 @@ public class Surround4Panel extends JPanel {
         }
     }
 
+
+    /**
+     *  Resets the background of every tile on the board to its default color.
+     *
+     * @param size The size (width and height) of the game board.
+     */
 
     private void resetBack(int size) {
         for (int i = 0; i < size; i++) {
@@ -416,6 +496,35 @@ public class Surround4Panel extends JPanel {
                     //Otherwise leaves the button blank
                     board[row][col].setText("");
             }
+    }
+
+
+    /**
+     *  Creates a Map that holds the number of each player's number of wins and displays them on a Label.
+     *  These labels are added to a panel that will go on the main GUI of the program
+     *
+     * @param size The number of players in the game.
+     */
+
+    private void createWinners(int size) {
+        //Creates a new array of JLabels
+        wins = new JLabel[size + 1];
+        //Creates a new map with the Key being the player number and value the number of wins that player has.
+        win = new HashMap<String, Integer>();
+
+        //removes any existing labels from the panel.
+        panel2.removeAll();
+
+        for (int i = 1; i < size + 1; i++) {
+
+            //Adds a new entry in the map with the player number and sets their wins to zero
+            win.put("" + i, 0);
+            //Adds the information from the map and displays it on a JLabel
+            wins[i] = new JLabel("Player " + i + " Wins: " + win.get("" + i));
+
+            //Adds the new JLabel to a the panel.
+            panel2.add(wins[i]);
+        }
     }
 }
 
