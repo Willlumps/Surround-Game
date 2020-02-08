@@ -194,20 +194,20 @@ public class Surround4Panel extends JPanel {
             if(dialogResult == JOptionPane.YES_OPTION){
                 AI = true;
             }
+        }
 
-            //If the computer is to make the first move, a random square will be selected on the board
-            if (game.getFirstPlayer() == 1) {
-                Random rand = new Random();
+        //If the computer is to make the first move, a random square will be selected on the board
+        if (AI == true) {
+            Random rand = new Random();
 
-                //Random number between 0 and the board length - 1 are generated for the first play.
-                int randRow = rand.nextInt(board.length - 1);
-                int randCol = rand.nextInt(board.length - 1);
+            //Random number between 0 and the board length - 1 are generated for the first play.
+            int randRow = rand.nextInt(board.length - 1);
+            int randCol = rand.nextInt(board.length - 1);
 
-                //Sets the tile and switches to the next player
-                if (game.select(randRow, randCol)) {
-                    board[randRow][randCol].setText("" + game.getCurrentPlayer());
-                    player = game.nextPlayer();
-                }
+            //Sets the tile and switches to the next player
+            if (game.select(randRow, randCol)) {
+                board[randRow][randCol].setText("" + game.getCurrentPlayer());
+                player = game.nextPlayer();
             }
         }
 
@@ -333,74 +333,112 @@ public class Surround4Panel extends JPanel {
 
     private void paintBackground(int row, int col) {
 
+        // Everything in this function follows simple guidelines in order to display the correct tile background
+        // First it will check if the square is is null
+        // If not it will pull the tile's propertyColor value
+        // Depending on the position of the tile (corner/border/middle) and its property color it will set
+        // The background of the tile in in relation to those two things as long as the current player
+        // And the tile it is currently checking match up
+        // For example, if the current tile belongs to player 2, it will only display displayed when it is player 2's
+        // Turn to play, further only cells belonging to player 1 will be colored when it is player ones turn to play.
+
+        // The corner tiles only have one color to check for as if both of its neighboring tiles are occupied
+        // the game has ended or that tile can no longer be used to win
+        // The corner pieces can be either red, indicating immediate risk of losing or
+        // default (blue) indicating no risk
+
+        //Top Left Corner
         if (row == 0 && col == 0 && game.getCell(0, 0) != null) {
             if (game.getCell(row, col).getPropertyColor() == 2) {
                 if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
                     board[row][col].setBackground(Color.pink);
                 }
             }
-        } else if (row == 0 && col == board.length - 1 && game.getCell(row, col) != null) {
-            if (game.getCell(row, col).getPropertyColor() == 2) {
-                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
-                    board[row][col].setBackground(Color.pink);
-                }
-            }
-        }  else if (row == board.length - 1 && col == 0 && game.getCell(row, col) != null) {
-            if (game.getCell(row, col).getPropertyColor() == 2) {
-                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
-                    board[row][col].setBackground(Color.pink);
-                }
-            }
-        } else if (row == board.length - 1 && col == board.length - 1 && game.getCell(row, col) != null) {
+        }
+        //Top Right Corner
+        else if (row == 0 && col == board.length - 1 && game.getCell(row, col) != null) {
             if (game.getCell(row, col).getPropertyColor() == 2) {
                 if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
                     board[row][col].setBackground(Color.pink);
                 }
             }
         }
+        //Bottom Left Corner
+        else if (row == board.length - 1 && col == 0 && game.getCell(row, col) != null) {
+            if (game.getCell(row, col).getPropertyColor() == 2) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.pink);
+                }
+            }
+        }
+        //Bottom Right Corner
+        else if (row == board.length - 1 && col == board.length - 1 && game.getCell(row, col) != null) {
+            if (game.getCell(row, col).getPropertyColor() == 2) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.pink);
+                }
+            }
+        }
+        // The bordering tiles (those that are around the perimeter of the game board) are checked for two colors
+        // Yellow, indicating that one neighboring tile is occupied by an opponent
+        // Red, indicating two neighboring tiles are occupied and this player is at risk of losing the game.
+        // Otherwise the color is default (blue)
 
+        //Top Border
         else if (row == 0 && game.getCell(row, col) != null) {
+            if (game.getCell(row, col).getPropertyColor() == 2) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.decode("#e1e4af"));
+                }
+            } else if (game.getCell(row, col).getPropertyColor() == 3) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.pink);
+                }
+            }
+        }
+        //Left Border
+        else if (col == 0 && game.getCell(row, col) != null) {
+            if (game.getCell(row, col).getPropertyColor() == 2) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.decode("#e1e4af"));
+                }
+            } else if (game.getCell(row, col).getPropertyColor() == 3) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.pink);
+                }
+            }
+        }
+        //Bottom Border
+        else if (row == board.length - 1 && game.getCell(row, col) != null) {
+            if (game.getCell(row, col).getPropertyColor() == 2) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.decode("#e1e4af"));
+                }
+            } else if (game.getCell(row, col).getPropertyColor() == 3) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.pink);
+                }
+            }
+        }
+        //Right Border
+        else if (col == board.length - 1 && game.getCell(row, col) != null) {
+            if (game.getCell(row, col).getPropertyColor() == 2) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.decode("#e1e4af"));
+                }
+            } else if (game.getCell(row, col).getPropertyColor() == 3) {
+                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
+                    board[row][col].setBackground(Color.pink);
+                }
+            }
+        }
+        // Any Tile in the middle of the board can be one of four colors.
+        // Default (blue), indicates no neighboring opponents or the tile is at no risk of causing a loss
+        // Green, the tile is surrounded by one opposing tile
+        // Yellow, the tile is surrounded by two opposing tiles
+        // Red, the tile is surrounded by three opposing tiles and is at risk of losing
 
-            if (game.getCell(row, col).getPropertyColor() == 2) {
-                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
-                    board[row][col].setBackground(Color.decode("#e1e4af"));
-                }
-            } else if (game.getCell(row, col).getPropertyColor() == 3) {
-                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
-                    board[row][col].setBackground(Color.pink);
-                }
-            }
-        } else if (col == 0 && game.getCell(row, col) != null) {
-            if (game.getCell(row, col).getPropertyColor() == 2) {
-                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
-                    board[row][col].setBackground(Color.decode("#e1e4af"));
-                }
-            } else if (game.getCell(row, col).getPropertyColor() == 3) {
-                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
-                    board[row][col].setBackground(Color.pink);
-                }
-            }
-        } else if (row == board.length - 1 && game.getCell(row, col) != null) {
-            if (game.getCell(row, col).getPropertyColor() == 2) {
-                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
-                    board[row][col].setBackground(Color.decode("#e1e4af"));
-                }
-            } else if (game.getCell(row, col).getPropertyColor() == 3) {
-                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
-                    board[row][col].setBackground(Color.pink);
-                }
-            }
-        } else if (col == board.length - 1 && game.getCell(row, col) != null) {
-            if (game.getCell(row, col).getPropertyColor() == 2) {
-                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
-                    board[row][col].setBackground(Color.decode("#e1e4af"));
-                }
-            } else if (game.getCell(row, col).getPropertyColor() == 3) {
-                if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
-                    board[row][col].setBackground(Color.pink);
-                }
-            }
-        } else if (row != 0 && col != 0 && row != board.length - 1 && col != board.length - 1 && game.getCell(row, col) != null){
+        else if (row != 0 && col != 0 && row != board.length - 1 && col != board.length - 1 && game.getCell(row, col) != null){
             if (game.getCell(row, col).getPropertyColor() == 2) {
                 if (game.getCurrentPlayer() == game.getCell(row, col).getPlayerNumber()) {
                     board[row][col].setBackground(Color.decode("#b4d88d"));
@@ -424,11 +462,15 @@ public class Surround4Panel extends JPanel {
      */
 
     private void AI() {
+        //If the AI variable is false, the computer will not make any plays, leaving two players to play against eachother.
         if (AI == false) {
             return;
         }
+
+        //Receives the cell with the location of the next play sets it in a temporary cell.
         Cell nextMove = game.AI();
 
+        //If the cell is not null, it will set the text to that tile and move onto the next player
         if (nextMove != null) {
             board[nextMove.getRow()][nextMove.getCol()].setText("" + game.getCurrentPlayer());
             player = game.nextPlayer();
@@ -443,6 +485,7 @@ public class Surround4Panel extends JPanel {
      */
 
     private void resetBack(int size) {
+        //Iterates through the entire game board and sets each tile to the default background color (blue)
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 board[i][j].setBackground(null);

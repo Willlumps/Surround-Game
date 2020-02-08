@@ -1,9 +1,6 @@
 package surroundpack;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Surround4Game {
 
@@ -189,28 +186,57 @@ public class Surround4Game {
 			return false;
 	}
 
+
+	/**
+	 *   Checks the tiles neighboring the top left corner tile for opponents
+	 *
+	 * @param row The row that contains the cell
+	 * @param col The column that contains the cell
+	 */
+
 	public void checkTopLeftCornerOpponents(int row, int col) {
+		// Counting variable used for keeping track of the number of adjacent tiles that are occupied.
+		// Starts at one as that is the default property color used for determining the background color of the
+		// tiles. This variable will be used to set the passed tiles property color to the correct number
+		// depending on how many opponents surround the tile.
 		int count = 1;
+		//ArrayList that holds the playernumber, if any, of the adjacent tiles
 		ArrayList<Integer> opp = new ArrayList<Integer>();
 
+		//If the tile directly to the right is occupied, increment the count variable by one and
+		//add the player number of that tile to the ArrayList opp.
 		if (isRightNull(row, col)) {
 			count++;
 			opp.add(board[row][col + 1].getPlayerNumber());
 		}
+		//If the tile directly below is occupied, increment the count variable by one and
+		//add the player number of that tile to the ArrayList opp.
 		if (isDownNull(row, col)) {
 			count++;
 			opp.add(board[row + 1][col].getPlayerNumber());
 		}
-
+		// If the adjacent tiles are all surrounded by the same opponent, set that tile's property color to the
+		// variable count.
+		// Otherwise the property color will remain at it's default value (1, blue)
 		if (sameOpponents(opp)) {
 			board[row][col].setPropertyColor(count);
 		} else {
 			board[row][col].setPropertyColor(1);
 		}
-
 	}
+
+
+	/**
+	 *   Checks the tiles neighboring the top right corner tile for opponents
+	 *
+	 * @param row The row that contains the cell
+	 * @param col The column that contains the cell
+	 */
 
 	public void checkTopRightCornerOpponents(int row, int col) {
+		// This method follows the same procedure outlined above in the "checkTopLeftCornerForOpponents" method.
+		// If you would like a detailed breakdown of what is happening please refer to that method.
+
 		int count = 1;
 		ArrayList<Integer> opp = new ArrayList<Integer>();
 
@@ -230,8 +256,19 @@ public class Surround4Game {
 		}
 
 	}
+
+
+	/**
+	 *   Checks the tiles neighboring the bottom right corner tile for opponents
+	 *
+	 * @param row The row that contains the cell
+	 * @param col The column that contains the cell
+	 */
 
 	public void checkBottomRightOpponents(int row, int col) {
+		// This method follows the same procedure outlined above in the "checkTopLeftCornerForOpponents" method.
+		// If you would like a detailed breakdown of what is happening please refer to that method.
+
 		int count = 1;
 		ArrayList<Integer> opp = new ArrayList<Integer>();
 
@@ -251,8 +288,19 @@ public class Surround4Game {
 		}
 
 	}
+
+
+	/**
+	 *   Checks the tiles neighboring the bottom left corner tile for opponents
+	 *
+	 * @param row The row that contains the cell
+	 * @param col The column that contains the cell
+	 */
 
 	public void checkBottomLeftOpponents(int row, int col) {
+		// This method follows the same procedure outlined above in the "checkTopLeftCornerForOpponents" method.
+		// If you would like a detailed breakdown of what is happening please refer to that method.
+
 		int count = 1;
 		ArrayList<Integer> opp = new ArrayList<Integer>();
 
@@ -272,8 +320,23 @@ public class Surround4Game {
 		}
 
 	}
+
+
+	/**
+	 *   Checks the tiles neighboring a tile on the top row of the board, excluding the corner tiles, for opponents
+	 *   returns 1 if the adjacent tiles all belong to the same opponent, -1 otherwise
+	 *
+	 * @param row The row that contains the cell
+	 * @param col The column that contains the cell
+	 * @return returns 1 if the adjacent tiles all belong to the same opponent, -1 otherwise
+	 */
 
 	public int checkTopBorderForOpponents(int row, int col) {
+		// This method follows the same procedure outlined above in the "checkTopLeftCornerForOpponents" method with
+		// the exception that this method also returns a value depending on if the property color was set to a value
+		// other than default.
+		// If you would like a detailed breakdown of what is happening please refer to that method.
+
 		int count = 1;
 		ArrayList<Integer> opp = new ArrayList<Integer>();
 
@@ -298,8 +361,23 @@ public class Surround4Game {
 		}
 
 	}
+
+
+	/**
+	 *   Checks the tiles neighboring a tile on the far left column, excluding the corner tiles, for opponents
+	 *   returns 1 if the adjacent tiles all belong to the same opponent, -1 otherwise
+	 *
+	 * @param row The row that contains the cell
+	 * @param col The column that contains the cell
+	 * @return returns 1 if the adjacent tiles all belong to the same opponent, -1 otherwise
+	 */
 
 	public int checkLeftBorderForOpponents(int row, int col) {
+		// This method follows the same procedure outlined above in the "checkTopLeftCornerForOpponents" method with
+		// the exception that this method also returns a value depending on if the property color was set to a value
+		// other than default.
+		// If you would like a detailed breakdown of what is happening please refer to that method.
+
 		int count = 1;
 		ArrayList<Integer> opp = new ArrayList<Integer>();
 
@@ -324,8 +402,23 @@ public class Surround4Game {
 			return -1;
 		}
 	}
+
+
+	/**
+	 *   Checks the tiles neighboring a tile on the bottom row of the board, excluding the corner tiles, for opponents
+	 *   returns 1 if the adjacent tiles all belong to the same opponent, -1 otherwise
+	 *
+	 * @param row The row that contains the cell
+	 * @param col The column that contains the cell
+	 * @return returns 1 if the adjacent tiles all belong to the same opponent, -1 otherwise
+	 */
 
 	public int checkBottomBorderForOpponents(int row, int col) {
+		// This method follows the same procedure outlined above in the "checkTopLeftCornerForOpponents" method with
+		// the exception that this method also returns a value depending on if the property color was set to a value
+		// other than default.
+		// If you would like a detailed breakdown of what is happening please refer to that method.
+
 		int count = 1;
 		ArrayList<Integer> opp = new ArrayList<Integer>();
 
@@ -350,8 +443,23 @@ public class Surround4Game {
 			return -1;
 		}
 	}
+
+
+	/**
+	 *   Checks the tiles neighboring a tile on the far right column, excluding the corner tiles, for opponents
+	 *   returns 1 if the adjacent tiles all belong to the same opponent, -1 otherwise
+	 *
+	 * @param row The row that contains the cell
+	 * @param col The column that contains the cell
+	 * @return returns 1 if the adjacent tiles all belong to the same opponent, -1 otherwise
+	 */
 
 	public int checkRightBorderForOpponents(int row, int col) {
+		// This method follows the same procedure outlined above in the "checkTopLeftCornerForOpponents" method with
+		// the exception that this method also returns a value depending on if the property color was set to a value
+		// other than default.
+		// If you would like a detailed breakdown of what is happening please refer to that method.
+
 		int count = 1;
 		ArrayList<Integer> opp = new ArrayList<Integer>();
 
@@ -377,7 +485,23 @@ public class Surround4Game {
 		}
 	}
 
+
+	/**
+	 *   Checks the tiles neighboring a tile in the middle of the board, excluding the corner and
+	 *   perimeter tiles, for opponents
+	 *   returns 1 if the adjacent tiles all belong to the same opponent, -1 otherwise
+	 *
+	 * @param row The row that contains the cell
+	 * @param col The column that contains the cell
+	 * @return returns 1 if the adjacent tiles all belong to the same opponent, -1 otherwise
+	 */
+
 	public int checkMiddleForOpponents(int row, int col) {
+		// This method follows the same procedure outlined above in the "checkTopLeftCornerForOpponents" method with
+		// the exception that this method also returns a value depending on if the property color was set to a value
+		// other than default.
+		// If you would like a detailed breakdown of what is happening please refer to that method.
+
 		int count = 1;
 		ArrayList<Integer> opp = new ArrayList<Integer>();
 
@@ -407,6 +531,14 @@ public class Surround4Game {
 		}
 
 	}
+
+
+	/**
+	 *   Used to check every tile on the board for adjacent opponents
+	 *
+	 * @param row The row that contains the tile to be checked
+	 * @param col The column that contains the tile to be checked
+	 */
 
 	public void checkForOpponents(int row, int col) {
 		if (row == 0 && col == 0 && board[0][0] != null) {
@@ -430,21 +562,65 @@ public class Surround4Game {
 		}
 	}
 
+
+	/**
+	 *   Checks if the tile to directly to the left of the passed tile is occupied
+	 *
+	 * @param row The row that contains the tile to be checked
+	 * @param col The column that contains the tile to be checked
+	 * @return true if the tile is occupied, false otherwise
+	 */
+
 	public boolean isLeftNull(int row, int col) {
 		 return board[row][col] != null && board[row][col - 1] != null;
 	}
+
+
+	/**
+	 *   Checks if the tile to directly to the right of the passed tile is occupied
+	 *
+	 * @param row The row that contains the tile to be checked
+	 * @param col The column that contains the tile to be checked
+	 * @return true if the tile is occupied, false otherwise
+	 */
 
 	public boolean isRightNull(int row, int col) {
 		return board[row][col] != null && board[row][col + 1] != null;
 	}
 
+
+	/**
+	 *   Checks if the tile to directly above the passed tile is occupied
+	 *
+	 * @param row The row that contains the tile to be checked
+	 * @param col The column that contains the tile to be checked
+	 * @return true if the tile is occupied, false otherwise
+	 */
+
 	public boolean isUpNull(int row, int col) {
 		return board[row][col] != null && board[row - 1][col] != null;
 	}
 
+
+	/**
+	 *   Checks if the tile to directly below the passed tile is occupied
+	 *
+	 * @param row The row that contains the tile to be checked
+	 * @param col The column that contains the tile to be checked
+	 * @return true if the tile is occupied, false otherwise
+	 */
+
 	public boolean isDownNull(int row, int col) {
 		return board[row][col] != null && board[row + 1][col] != null;
 	}
+
+
+	/**
+	 *   Checks if the values in the passed array are identical indicating that the
+	 *   tile that was checked is surrounded by the same opponent.
+	 *
+	 * @return true if every item in the list is identical, false otherwise
+	 */
 
 	private boolean sameOpponents(ArrayList<Integer> opp) {
 		for (Integer i : opp) {
@@ -455,7 +631,18 @@ public class Surround4Game {
 		return true;
 	}
 
+
+	/**
+	 *   Checks for the number of occupied tiles surrounding the tile that is in the position
+	 *   of the passed row and column.
+	 *
+	 * @param row The row that contains the tile to be checked
+	 * @param col The column that contains the tile to be checked
+	 * @return The number of adjacent tiles that are currently occupied.
+	 */
+
 	public int checkAIWin(int row, int col) {
+		//variable used to keep track of the number of occupied adjacent tiles.
 		int count = 0;
 		if (row == 0 && col == 0) {
 			if (isRightNull(row, col)) {
@@ -543,31 +730,61 @@ public class Surround4Game {
 		return count;
 	}
 
-	public Cell AI() {
 
-		//First the AI will check for winnable moves for the AI, if an immediate win is not found it will attempt to
-		//block the player if they are about to win in the following turn.
+	/**
+	 *   This is the main logic behind the computers AI. It determines if there is a winnable move or one that can block
+	 *   the player from winning and makes its selection accordingly.
+	 *
+	 * @return Returns a cell containing the coordinates on the board that the computer has determined to be a suitable
+	 * 		   next move
+	 */
+
+	public Cell AI() {
+		// The first round of AI logic will be commented thoroughly to explain the logic behind it
+		// All remaining moves/blocks follow the same logic with minor changes to determine the best
+		// possible move for the computer to make.
+		// Please refer to these comments to see how the rest of the logic works
+
+
+		// First the computer will check for winnable moves, if an immediate win is not found it will attempt to
+		// block the player if they are about to win in the following turn.
+		// Looping through the board the first time
 		for (int row = 0; row < board.length; row++) {
 			for (int col = 0; col < board.length; col++) {
 
+				// First the current player is checked, the computer will always be player 1
 				if (getCurrentPlayer() == 1) {
+					// If the current cell is occupied by the opposing player (Player 2), the computer will look
+					// for a winning play. i.e. a tile with one open adjacent tile while the computer is occupying the
+					// other adjacent tiles.
 					if (getCell(row, col) != null && getCell(row, col).getPlayerNumber() == 2) {
 
-						/** First the AI will check if there is a winnable move to play */
-						//Top Left Corner Win AI
+						// First the AI will check if there is a winnable move to play
+
+						// Top Left Corner Win AI
 						if (row == 0 & col == 0) {
+							// If the corner tile has one adjacent tile that is unoccupied.
 							if (checkAIWin(row, col) == 1) {
+								// First it will check if that unoccupied tile is to the right and that the occupied
+								// tile below is is occupied by the computer.
 								if (getCell(row + 1, col) == null && getCell(row, col + 1).getPlayerNumber() == 1) {
+									// If so the the computer will check that it is a valid tile to make a play on
+									// And if so, returns that tile.
 									if (select(row + 1, col)) {
 										return board[row + 1][col];
 									}
-								} else if (getCell(row, col + 1) == null && getCell(row + 1, col).getPlayerNumber() == 1) {
+								}
+								// Otherwise it will check if the tile below is unoccupied and the tile to the right
+								// is occupied by the computer. Again returning that cell if it is a valid play to make.
+								else if (getCell(row, col + 1) == null && getCell(row + 1, col).getPlayerNumber() == 1) {
 									if (select(row, col + 1)) {
 										return board[row][col + 1];
 									}
 								}
 							}
 						}
+
+						//The following three corners are check in the same manner as the first.
 						//Top Right Corner Win AI
 						else if (row == 0 & col == board.length - 1) {
 							if (checkAIWin(row, col) == 1) {
@@ -612,7 +829,8 @@ public class Surround4Game {
 								}
 							}
 						}
-
+						// The perimeter tiles are check in the same manner as the corner tiles withe the exception that
+						// a third tile has to be checked.
 						//Top Border Win AI
 						else if (row == 0) {
 							if (checkAIWin(row, col) == 2) {
@@ -700,7 +918,8 @@ public class Surround4Game {
 								}
 							}
 						}
-
+						// Tiles in the middle of the board follow the same logic as those in the corners
+						// and those on the perimeter.
 						//Middle Board Win AI
 						else if (row != board.length - 1 && col != board.length - 1 && board[row][col] != null) {
 							if (checkAIWin(row, col) == 3) {
@@ -733,8 +952,12 @@ public class Surround4Game {
 						}
 					}
 
-					/** If no winnable move was found, it will next check for a winning move for the player in an attempt
-					 * to block it */
+					// If no winnable move was found, it will next check for a winning move for the player in an attempt
+					// to block it. These conditions are check the same as before with the exception being that
+					// the computer uses the property color of the square to determine if it would be a suitable block
+					// to make.
+					// This is the case because the game resets the background at the start of every turn in order to
+					// paint the tiles belonging to the current player. This in turn causes
 
 					if (getCell(row, col) != null && getCell(row, col).getPlayerNumber() == 1) {
 						//Top Left Corner AI Block
@@ -928,12 +1151,18 @@ public class Surround4Game {
 			}
 		}
 
-		//If no winning move or block was found
-		//the AI will look for an opponents tile that has two open playable sides
-		//and play one of these two tiles at random to set up for a winning move
-		//on its next turn.
-		//If none were found it will look for one of its own tiles surrounded by
-		//two opposing tiles to block the player from winning on that tile.
+		// If no winning move or block was found
+		// the AI will look for an opponents tile that has two open playable sides
+		// and play one of these two tiles at random to set up for a winning move
+		// on its next turn.
+		// If none were found it will look for one of its own tiles surrounded by
+		// two opposing tiles to block the player from winning on that tile.
+
+		// From this point forward, the computer will use a random number to determine which tile to
+		// play next to create a a bit of unpredictability in what move it will make next.
+		// For example, if there are three open tiles that are available for the computer to play, all three have an
+		// equal chance of being chosen.
+
 		for (int row = 0; row < board.length; row++) {
 			for (int col = 0; col < board.length; col++) {
 				Double rand = Math.random();
@@ -1321,7 +1550,9 @@ public class Surround4Game {
 							}
 						}
 					}
-					/** AI will once again attempt to block the player */
+
+					// The computer will once again attempt to block the player
+
 					else if ((getCell(row, col) != null && getCell(row, col).getPlayerNumber() == 1)) {
 						//Top Left Corner
 						if (row == 0 & col == 0) {
@@ -1705,9 +1936,9 @@ public class Surround4Game {
 			}
 		}
 
-		//If two open spots were not found on either the AI's tiles or the player's tiles
-		//the AI will then look for tiles with three open tiles following the same
-		//guidelines as before.
+		// If two open spots were not found on either the AI's tiles or the player's tiles
+		// the AI will then look for tiles with three open tiles following the same
+		// guidelines as before.
 
 		for (int row = 0; row < board.length; row++) {
 			for (int col = 0; col < board.length; col++) {
@@ -2030,7 +2261,9 @@ public class Surround4Game {
 							}
 						}
 					}
-					/** Attempting to block yet again */
+
+					// Attempting to block yet again
+
 					else if (getCell(row, col) != null && getCell(row, col).getPlayerNumber() == 1) {
 						//Top Border
 						if (row == 0) {
@@ -2383,19 +2616,7 @@ public class Surround4Game {
 			}
 		}
 
-		//If none of the above works, and you're reading this, send help.
-		if (getCurrentPlayer() == 1) {
-			Random rand = new Random();
-
-			int randRow = rand.nextInt((board.length - 1) + 1);
-			int randCol = rand.nextInt((board.length - 1) + 1);
-
-			if (select(randRow, randCol)) {
-				return board[randRow][randCol];
-			}
-		}
-
-
+		//If you're reading this, send help.
 
 		return null;
 	}
