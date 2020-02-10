@@ -286,15 +286,13 @@ public class Surround4Panel extends JPanel {
                 }
             }
 
-
-            //resetBack(board.length);
-
             //Displays the correct number on each square on the board
             displayBoard(board.length);
 
             //Calls getWinner method to check for a winner
             int winner = game.getWinner();
-
+            //TODO CHECK IF EVERY SQUARE IS FILLED BUT THERE ISN'T A WINNER
+            //TODO THEN GIVE A POPUP INDICATING SO AND RESET THE GAME
 
             if (winner != -1) {
                 //If there is a winner, display the winning player in a popup
