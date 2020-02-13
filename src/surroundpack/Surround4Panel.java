@@ -71,12 +71,14 @@ public class Surround4Panel extends JPanel {
         //Creates new panel for the game
         panel1 = new JPanel();
 
-        panel2 = new JPanel(new GridLayout(0, 1));
+        panel2 = new JPanel(new GridLayout(0, 3));
 
         //Sets up the game board with input received from the user
         setUpGame();
 
-        //centers the panel in the middle of the frame
+        //centers the panel containing the board in the middle of the frame
+        //and adds the panel containing the number of wins for each player below
+        //the first panel.
         add(panel1, BorderLayout.CENTER);
         add(panel2, BorderLayout.PAGE_END);
 
@@ -198,17 +200,7 @@ public class Surround4Panel extends JPanel {
 
         //If the computer is to make the first move, a random square will be selected on the board
         if (AI == true) {
-            Random rand = new Random();
-
-            //Random number between 0 and the board length - 1 are generated for the first play.
-            int randRow = rand.nextInt(board.length - 1);
-            int randCol = rand.nextInt(board.length - 1);
-
-            //Sets the tile and switches to the next player
-            if (game.select(randRow, randCol)) {
-                board[randRow][randCol].setText("" + game.getCurrentPlayer());
-                player = game.nextPlayer();
-            }
+            firstAIMove();
         }
 
         //Sets up the panel that displays the number of wins each player has
@@ -246,26 +238,30 @@ public class Surround4Panel extends JPanel {
 
             }
 
-
             //loops through the game squares to check if one was pressed
             for (int row = 0; row < board.length; row++) {
                 for (int col = 0; col < board.length; col++) {
+
                     //If a square was pressed, execute the following
                     if (board[row][col] == e.getSource()) {
                         //checks if the selected square is null (empty)
                         if (game.select(row, col)) {
                             //if empty, sets the square to display the number of the player that pressed it
-
                             board[row][col].setText("" + game.getCurrentPlayer());
+                            //Move on to the next player
                             player = game.nextPlayer();
+                            //resets the background to display the next players possible moves
                             resetBack(board.length);
-
+                            //repaints the backgrounds for the next player
                             for (int r = 0; r < board.length; r++) {
                                 for (int c = 0; c < board.length; c++) {
                                     game.checkForOpponents(r, c);
                                     paintBackground(r, c);
                                 }
                             }
+
+                            //Runs AI function if playing against the computer
+                            //and resets + repaints the background for the next player
                             AI();
                             resetBack(board.length);
 
@@ -276,8 +272,6 @@ public class Surround4Panel extends JPanel {
                                 }
                             }
 
-                            //moves onto the next player
-                            //player = game.nextPlayer();
                         } else {
                             //If the button pressed was already in play, warn user prompt them to pick another square
                             JOptionPane.showMessageDialog(null, "Not a valid square! Pick again.");
@@ -291,8 +285,16 @@ public class Surround4Panel extends JPanel {
 
             //Calls getWinner method to check for a winner
             int winner = game.getWinner();
-            //TODO CHECK IF EVERY SQUARE IS FILLED BUT THERE ISN'T A WINNER
-            //TODO THEN GIVE A POPUP INDICATING SO AND RESET THE GAME
+
+            //If the gameboard is full but there are no winners, notify the players and reset the game board
+            if (game.fullBoard() == 1) {
+                JOptionPane.showMessageDialog(null, "No Winners Here! Resetting Game...");
+                game.reset();
+                resetBack(board.length);
+                displayBoard(board.length);
+                game.setPlayer(game.getFirstPlayer());
+            }
+
 
             if (winner != -1) {
                 //If there is a winner, display the winning player in a popup
@@ -302,6 +304,10 @@ public class Surround4Panel extends JPanel {
                 resetBack(board.length);
                 displayBoard(board.length);
                 game.setPlayer(game.getFirstPlayer());
+
+                if (AI == true) {
+                    firstAIMove();
+                }
 
                 //Loops through the players and updates the win total if they won the previous match.
                 for (int i = 1; i < game.getNumPlayers() + 1; i++) {
@@ -464,6 +470,16 @@ public class Surround4Panel extends JPanel {
         if (AI == false) {
             return;
         }
+        if (game.fullBoard() == 1) {
+            JOptionPane.showMessageDialog(null, "No Winners Here! Resetting Game...");
+            game.reset();
+            resetBack(board.length);
+            displayBoard(board.length);
+            game.setPlayer(game.getFirstPlayer());
+            if (AI == true) {
+                firstAIMove();
+            }
+        }
 
         //Receives the cell with the location of the next play sets it in a temporary cell.
         Cell nextMove = game.AI();
@@ -473,6 +489,7 @@ public class Surround4Panel extends JPanel {
             board[nextMove.getRow()][nextMove.getCol()].setText("" + game.getCurrentPlayer());
             player = game.nextPlayer();
         }
+
     }
 
 
@@ -567,6 +584,29 @@ public class Surround4Panel extends JPanel {
             panel2.add(wins[i]);
         }
     }
+
+
+    /**
+     *  Selects a random square for the AI to play if it selected to go first at the
+     *  start of a new game.
+     *
+     */
+
+    private void firstAIMove() {
+        Random rand = new Random();
+
+        //Random number between 0 and the board length - 1 are generated for the first play.
+        int randRow = rand.nextInt(board.length - 1);
+        int randCol = rand.nextInt(board.length - 1);
+
+        //Sets the tile and switches to the next player
+        if (game.select(randRow, randCol)) {
+            board[randRow][randCol].setText("" + game.getCurrentPlayer());
+            player = game.nextPlayer();
+        }
+    }
 }
+
+
 
 

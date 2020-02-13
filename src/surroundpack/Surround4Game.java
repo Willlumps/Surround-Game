@@ -49,6 +49,18 @@ public class Surround4Game {
 		this.numPlayers = 2;
 	}
 
+	public int fullBoard() {
+		for (int r = 0; r < board.length; r++) {
+			for (int c = 0; c < board.length; c++) {
+				//sets the currently selected cell to null (empty)
+				if (board[r][c] == null) {
+					return -1;
+				}
+			}
+		}
+		return 1;
+	}
+
 
 	/**
 	 *   Resets the game board by setting each cell to null;
@@ -2635,7 +2647,6 @@ public class Surround4Game {
 		}
 
 		//If you're reading this, send help.
-
 		return null;
 	}
 
